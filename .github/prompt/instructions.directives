@@ -1,0 +1,206 @@
+# Structured Directives for GitHub Copilot Workspace
+
+@WORKSPACE[GitHub Copilot Workspace]
+@PURPOSE[Enhance GitHub Copilot capabilities with automation tools and consistent development patterns]
+
+## PROTOCOL DIRECTIVES
+
+@CLASSIFY_TASK:
+  IF Δlines < 10 AND Δfiles ≤ 1 AND solution_clear:
+    EXECUTE: Search → Match → Apply → Verify
+  ELSE:
+    EXECUTE: ReadState → Analyze → Plan → Implement → Verify
+
+@CORE_LOOP:
+  STEP[1]: PERSPECTIVE_SCALE → min_perspectives WHERE coverage(task) = complete
+  STEP[2]: ASSUMPTION_AUDIT → identify(assumptions, hidden_constraints, mutable_state)
+  STEP[3]: SEARCH_BEFORE_BUILD → check(codebase, patterns, existing_solutions)
+  STEP[4]: CONTEXT_COMPRESSION → reduce_to_minimal_invariants() → update(.claude/state.md)
+  STEP[5]: BOUNDARY_VERIFICATION → validate(types, layers, async_patterns, goals_alignment)
+  STEP[6]: TYPE_SAFETY → make_invalid_states_unrepresentable(at_boundaries)
+
+@META_OPERATIONS:
+  OFFLOAD: repetitive_tasks → [scripts, MCP_servers, CI/CD]
+  AUTOMATE: patterns → [declarative_tools, webhooks]
+  REMOVE: [unused_code, files, frameworks, dependencies] MODE[aggressive]
+
+@ANTI_PATTERNS:
+  REJECT: [reinventing_solutions, logic_loops, circular_dependencies,
+           unvalidated_assumptions, dead_code_retention,
+           over_analysis(simple_tasks), under_analysis(complex_tasks)]
+
+@STATE_PERSISTENCE:
+  FILES: {
+    state: .claude/state.md,
+    goals: .claude/goals.md,
+    patterns: .claude/patterns.json,
+    cache: .claude/cache/
+  }
+  UPDATE_TRIGGER: architectural_changes > threshold
+
+## CODE QUALITY DIRECTIVES
+
+@CODE_STANDARDS:
+  REQUIRE: [maintainability, documentation, readability > cleverness,
+            meaningful_names, comments(complex_logic_only)]
+
+@ARCHITECTURE:
+  APPLY: SOLID_principles
+  PREFER: composition > inheritance
+  ENFORCE: single_responsibility(functions)
+  MODE: explicit > implicit
+  DESIGN_FOR: testability
+
+@ERROR_HANDLING:
+  ALWAYS: [graceful, meaningful_messages, appropriate_types]
+  NEVER: swallow_exceptions
+  VALIDATE: inputs_at_boundaries
+
+@TESTING:
+  UNIT_TESTS: business_logic
+  INTEGRATION_TESTS: critical_paths
+  COVERAGE: high(core_functionality)
+  NAMING: descriptive(explain_scenario)
+  PATTERN: AAA[Arrange, Act, Assert]
+
+@DOCUMENTATION:
+  DOCUMENT: [public_apis, interfaces]
+  MAINTAIN: [README(current), CHANGELOG]
+  INCLUDE: [usage_examples, dependencies]
+
+@SECURITY:
+  NEVER: [commit_secrets, trust_unsanitized_input]
+  ALWAYS: [sanitize_inputs, parameterized_queries, least_privilege, update_dependencies]
+
+@PERFORMANCE:
+  PRIORITY: clarity > performance
+  PROFILE: before_optimize
+  CONSIDER: [time_complexity, space_complexity]
+  USE: appropriate_data_structures
+  CACHE: expensive_computations
+
+## AUTOMATION DIRECTIVES
+
+@SCRIPTS:
+  dead_code_check: scripts/dead-code-check.sh → [TypeScript/knip, Python/vulture, Go/staticcheck]
+  arch_linting: scripts/setup-arch-linting.sh → enforce_boundaries
+  mcp_cache: scripts/mcp-cache.sh → cache_registry
+  git_hooks: scripts/setup-git-hooks.sh → validation
+  pattern_extract: scripts/pattern-extract.sh → analyze_patterns
+
+@VSCODE_TASKS: [Full_Workspace_Setup, Check_Dead_Code, Workspace_Status, Run_All_Tests]
+
+@GIT_HOOKS:
+  pre_commit: validate[code_quality, dead_code, linters]
+  commit_msg: enforce[conventional_commits]
+  post_commit: update[pattern_tracking]
+
+## LANGUAGE DIRECTIVES
+
+@PYTHON:
+  FOLLOW: PEP8
+  USE: [type_hints, f_strings, comprehensions(simple), context_managers]
+
+@TYPESCRIPT:
+  FEATURES: ES6+
+  PREFER: const > let
+  NEVER: var
+  USE: [async_await, type_safety, functional_patterns, interfaces, destructuring]
+
+@GO:
+  GUIDE: effective_Go
+  FORMAT: gofmt
+  ERRORS: explicit(never_ignore)
+  CLEANUP: defer
+  COMPOSITION: struct_composition > embedding
+  TESTS: table_driven
+
+@BASH:
+  ERROR_HANDLING: set -e
+  QUOTE: variables
+  CONDITIONALS: [[ ]] > [ ]
+  PROVIDE: usage_messages
+  USE: [functions(reusable_logic), comments(complex_operations)]
+
+@JAVA:
+  CONVENTIONS: Java_naming
+  COLLECTIONS: streams_api
+  PREFER: immutability
+  NULLABLE: Optional
+  STRUCTURE: Maven/Gradle_standard
+
+@CSHARP:
+  CONVENTIONS: Microsoft_naming
+  COLLECTIONS: LINQ
+  ASYNC: async_await
+  NULLABLE: reference_types
+  PATTERNS: .NET_standard
+
+## BEST PRACTICES DIRECTIVES
+
+@SOLID:
+  single_responsibility: each_class/function → one_thing
+  open_closed: open(extension) + closed(modification)
+  liskov_substitution: subtypes ↔ base_types
+  interface_segregation: many_specific > one_general
+  dependency_inversion: depend(abstractions) NOT depend(concretions)
+
+@DESIGN_PATTERNS:
+  USE: [Factory, Strategy, Observer, Decorator, Repository]
+  AVOID: [God_objects, circular_dependencies, deep_inheritance]
+
+@FILE_ORGANIZATION:
+  src/core → business_logic
+  src/api → interface_layer
+  src/utils → utilities
+  src/models → data_models
+  tests/ → mirror(src/)
+  docs/ → documentation
+  config/ → configuration
+  scripts/ → build_deploy
+
+@NAMING:
+  files.python: snake_case.py
+  files.typescript: kebab-case.ts
+  files.java: PascalCase.java
+  classes: PascalCase
+  functions.python: snake_case
+  functions.typescript: camelCase
+  functions.java: camelCase
+  constants: UPPER_CASE
+  private.python: _leading_underscore
+  private.typescript: private_fields
+
+## WORKFLOW DIRECTIVES
+
+@GIT_VERSION_CONTROL:
+  COMMIT_MSG: [clear, descriptive, conventional_commits]
+  COMMITS: atomic(one_logical_change)
+  BRANCHES: {feature/*, bugfix/*, hotfix/*}
+  PR_DESCRIPTIONS: meaningful
+  SELF_REVIEW: required
+  PRE_COMMIT: [run_tests, format_code, check_linting, update_docs]
+
+@WORKFLOW_PREFERENCES:
+  ORGANIZE: by_feature/domain NOT by_type
+  PROXIMITY: keep_related_files_close
+  SEPARATE: [business_logic, UI, data_access]
+  NAMING: clear_folder_conventions
+  CONSISTENCY: enforced
+
+@STATE_MANAGEMENT:
+  TRACK: {
+    state: .claude/state.md → [decisions, patterns, invariants, technical_debt],
+    goals: .claude/goals.md → [objectives, constraints, success_criteria],
+    patterns: .claude/patterns.json → pattern_history,
+    cache: .claude/cache/ → analysis_results
+  }
+
+## COMMUNICATION DIRECTIVES
+
+@COMMUNICATE:
+  STYLE: concise AND complete
+  FORMAT: markdown
+  INCLUDE: [code_examples, documentation_links]
+  ASK: clarifying_questions
+  PROVIDE: explanations

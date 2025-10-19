@@ -1,0 +1,193 @@
+// Formal Grammar for GitHub Copilot Workspace Instructions
+// EBNF-style notation
+
+workspace_config ::= metadata protocol quality automation languages practices workflow communication
+
+metadata ::= "WORKSPACE" name purpose
+  name := "GitHub Copilot Workspace"
+  purpose := "Enhance GitHub Copilot capabilities with automation tools and consistent development patterns"
+
+protocol ::= "PROTOCOL" complexity loop meta anti persistence
+
+  complexity ::= "CLASSIFY" fast_path | full_path
+    fast_path := condition("Δlines < 10 ∧ Δfiles ≤ 1 ∧ solution_clear")
+                 → sequence(Search, Match, Apply, Verify)
+    full_path := condition("complex changes")
+                 → sequence(ReadState, Analyze, Plan, Implement, Verify)
+
+  loop ::= "EXECUTE" step+
+    step := perspective_scale
+          | assumption_audit
+          | search_before_build
+          | context_compression
+          | boundary_verification
+          | type_safety
+
+    perspective_scale := "Minimum perspectives revealing necessary boundaries"
+    assumption_audit := "Identify" (assumptions | hidden_constraints | mutable_state)
+    search_before_build := "Check" (codebase | patterns | existing_solutions)
+    context_compression := "Reduce to minimal invariants" → update(".claude/state.md")
+    boundary_verification := "Validate" (types | layers | async_patterns | goals_alignment)
+    type_safety := "Make invalid states unrepresentable at boundaries"
+
+  meta ::= "META_OPS" offload | automate | remove
+    offload := (scripts | mcp_servers | cicd)
+    automate := (declarative_tools | webhooks)
+    remove := (unused_code | files | frameworks | dependencies) with_policy("aggressive")
+
+  anti ::= "AVOID" pattern+
+    pattern := reinventing_solutions
+             | logic_loops
+             | circular_dependencies
+             | unvalidated_assumptions
+             | dead_code_retention
+             | over_analysis_simple
+             | under_analysis_complex
+
+  persistence ::= "PERSIST" state_files trigger
+    state_files := {".claude/state.md", ".claude/goals.md", ".claude/patterns.json", ".claude/cache/"}
+    trigger := "Architectural changes beyond threshold"
+
+quality ::= "QUALITY" standards arch error_handling testing docs security perf
+
+  standards ::= require(maintainability, documentation, readability_over_cleverness,
+                        meaningful_names, comments_for_complex_only)
+
+  arch ::= apply(SOLID) + composition_over_inheritance
+         + single_responsibility_functions
+         + explicit_over_implicit
+         + design_for_testability
+
+  error_handling ::= always(graceful, meaningful_messages, appropriate_types)
+                   + never(swallow_exceptions)
+                   + validate_at_boundaries
+
+  testing ::= unit_tests(business_logic)
+            + integration_tests(critical_paths)
+            + high_coverage(core_functionality)
+            + naming(descriptive)
+            + pattern(AAA)
+
+  docs ::= document(public_apis, interfaces)
+         + maintain(README, CHANGELOG)
+         + include(usage_examples, dependencies)
+
+  security ::= never(commit_secrets, trust_unsanitized_input)
+             + always(sanitize_inputs, parameterized_queries, least_privilege,
+                     updated_dependencies)
+
+  perf ::= prioritize(clarity, then_performance)
+         + profile_before_optimize
+         + consider_complexity
+         + appropriate_data_structures
+         + cache_expensive_ops
+
+automation ::= "AUTOMATION" scripts tasks hooks
+
+  scripts ::= {
+    dead_code_check: "scripts/dead-code-check.sh" → tools(knip, vulture, staticcheck),
+    arch_linting: "scripts/setup-arch-linting.sh" → enforce_boundaries,
+    mcp_cache: "scripts/mcp-cache.sh" → cache_registry,
+    git_hooks: "scripts/setup-git-hooks.sh" → validation,
+    pattern_extract: "scripts/pattern-extract.sh" → analyze_patterns
+  }
+
+  tasks ::= ["Full Workspace Setup", "Check Dead Code", "Workspace Status", "Run All Tests"]
+
+  hooks ::= {
+    pre_commit: validate(code_quality, dead_code, linters),
+    commit_msg: enforce(conventional_commits),
+    post_commit: update(pattern_tracking)
+  }
+
+languages ::= "LANG" python | typescript | go | bash | java | csharp
+
+  python ::= follow(PEP8) + type_hints + f_strings + comprehensions + context_managers
+
+  typescript ::= es6plus + const_over_let + never_var + async_await + type_safety
+               + functional_patterns + interfaces + destructuring
+
+  go ::= effective_go + gofmt + explicit_errors + defer_cleanup
+       + struct_composition + table_driven_tests
+
+  bash ::= set_e + quote_vars + double_bracket_conditionals + usage_msgs
+         + functions + comments_complex
+
+  java ::= java_conventions + streams_api + immutability + optional + maven_gradle
+
+  csharp ::= ms_conventions + linq + async_await + nullable_refs + dotnet_patterns
+
+practices ::= "PRACTICE" solid design_patterns org naming
+
+  solid ::= {
+    single_responsibility: "Each class/function does one thing",
+    open_closed: "Open for extension, closed for modification",
+    liskov_substitution: "Subtypes must be substitutable for base types",
+    interface_segregation: "Many specific interfaces > one general interface",
+    dependency_inversion: "Depend on abstractions, not concretions"
+  }
+
+  design_patterns ::= use(Factory, Strategy, Observer, Decorator, Repository)
+                    + avoid(God_objects, circular_deps, deep_inheritance)
+
+  org ::= structure {
+    src: {core: business_logic, api: interface_layer, utils: utilities, models: data_models},
+    tests: mirror(src),
+    docs: documentation,
+    config: configuration,
+    scripts: build_deploy
+  }
+
+  naming ::= {
+    files: {python: snake_case, typescript: kebab_case, java: PascalCase},
+    classes: PascalCase,
+    functions: {python: snake_case, typescript: camelCase, java: camelCase},
+    constants: UPPER_CASE,
+    private: {python: _leading_underscore, typescript: private_fields}
+  }
+
+workflow ::= "WORKFLOW" vcs preferences state
+
+  vcs ::= commit_msg(clear, descriptive, conventional)
+        + atomic_commits
+        + branches(feature/*, bugfix/*, hotfix/*)
+        + meaningful_pr_descriptions
+        + self_review
+        + pre_commit(tests, format, lint, docs)
+
+  preferences ::= organize_by(feature_domain)
+                + proximity(related_files)
+                + separate(business_logic, ui, data_access)
+                + clear_naming
+                + consistency
+
+  state ::= track {
+    state: ".claude/state.md",
+    goals: ".claude/goals.md",
+    patterns: ".claude/patterns.json",
+    cache: ".claude/cache/"
+  }
+
+communication ::= "COMMUNICATE" with(concise, complete, markdown, code_examples,
+                                     doc_links, clarifying_questions)
+
+// Terminal productions
+Search ::= "search"
+Match ::= "match"
+Apply ::= "apply"
+Verify ::= "verify"
+ReadState ::= "read_state"
+Analyze ::= "analyze"
+Plan ::= "plan"
+Implement ::= "implement"
+
+// Predicates
+condition(expr) ::= expr evaluates_to boolean
+sequence(step*) ::= ordered_execution(step*)
+require(prop*) ::= mandatory(prop*)
+apply(principle) ::= enforce(principle)
+never(action) ::= forbidden(action)
+always(action) ::= mandatory(action)
+follow(standard) ::= conform_to(standard)
+use(pattern*) ::= recommended(pattern*)
+avoid(pattern*) ::= discouraged(pattern*)

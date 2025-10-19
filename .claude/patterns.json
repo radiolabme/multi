@@ -1,0 +1,165 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-18",
+    "patterns": {
+        "configuration": {
+            "multi_agent_consistency": {
+                "description": "Maintain consistent guidelines across multiple AI assistants",
+                "files": [
+                    ".github/copilot-instructions.md",
+                    ".cursorrules",
+                    ".clinerules"
+                ],
+                "principle": "Same standards, different formats",
+                "verification": "Cross-check guidelines for alignment"
+            },
+            "language_specific_settings": {
+                "description": "Customize editor behavior per language",
+                "location": ".vscode/settings.json",
+                "pattern": "[language]: { editor.*, formatter.* }",
+                "languages": [
+                    "python",
+                    "javascript",
+                    "typescript",
+                    "java",
+                    "csharp",
+                    "go",
+                    "rust"
+                ]
+            },
+            "format_on_save": {
+                "description": "Automatic code formatting",
+                "setting": "editor.formatOnSave: true",
+                "language_override": "Use [language] blocks for exceptions",
+                "formatters": {
+                    "python": "ms-python.python",
+                    "javascript": "esbenp.prettier-vscode",
+                    "typescript": "esbenp.prettier-vscode"
+                }
+            }
+        },
+        "documentation": {
+            "layered_approach": {
+                "description": "Multiple documentation levels for different use cases",
+                "layers": [
+                    "START_HERE.md - First contact, overview",
+                    "QUICKSTART.md - 5-minute setup",
+                    "README.md - Complete reference",
+                    "INSTALLATION.md - Detailed setup",
+                    "CHANGELOG.md - Version history"
+                ]
+            },
+            "inline_comments": {
+                "description": "Self-documenting configuration files",
+                "principle": "Every setting should have a comment explaining WHY",
+                "format": "// Comment explaining purpose"
+            }
+        },
+        "automation": {
+            "install_script": {
+                "description": "Automated workspace installation",
+                "file": "install.sh",
+                "features": [
+                    "backup existing",
+                    "interactive prompts",
+                    "error handling"
+                ],
+                "usage": "./install.sh [target_directory]"
+            },
+            "git_workflow": {
+                "description": "Streamlined version control",
+                "settings": [
+                    "git.autofetch",
+                    "git.enableSmartCommit",
+                    "git.confirmSync"
+                ],
+                "integration": "GitLens extension recommended"
+            }
+        },
+        "ai_assistance": {
+            "inline_suggestions": {
+                "description": "Real-time AI code completion",
+                "enabled_for": [
+                    "all file types",
+                    "comments",
+                    "strings"
+                ],
+                "settings": [
+                    "editor.inlineSuggest.enabled",
+                    "editor.suggestSelection"
+                ]
+            },
+            "context_awareness": {
+                "description": "AI understands project patterns",
+                "mechanism": "Custom instructions in .github/copilot-instructions.md",
+                "scope": [
+                    "code quality",
+                    "architecture",
+                    "testing",
+                    "documentation"
+                ]
+            },
+            "multi_agent_coordination": {
+                "description": "Multiple AI assistants work together",
+                "agents": {
+                    "github-copilot": "Primary code generation and inline suggestions",
+                    "claude-code": "Complex refactoring and architectural changes",
+                    "codex": "Algorithm implementation and optimization"
+                },
+                "coordination": "Shared configuration files ensure consistency"
+            }
+        },
+        "boundaries": {
+            "configuration_separation": {
+                "description": "Separate workspace from user settings",
+                "location": ".vscode/ directory",
+                "scope": "Workspace-specific, version-controlled",
+                "principle": "Don't override user preferences unnecessarily"
+            },
+            "language_boundaries": {
+                "description": "Language-specific configurations don't interfere",
+                "mechanism": "[language] blocks in settings.json",
+                "verification": "Each language has independent formatter"
+            }
+        },
+        "state_management": {
+            "claude_state": {
+                "description": "Persistent state for Claude sessions",
+                "files": [
+                    ".claude/state.md",
+                    ".claude/goals.md",
+                    ".claude/patterns.json"
+                ],
+                "auto_update": true,
+                "compression_triggers": [
+                    "architectural_change",
+                    "pattern_discovery",
+                    "N_iterations"
+                ]
+            }
+        }
+    },
+    "anti_patterns": {
+        "hardcoded_paths": {
+            "description": "Avoid absolute paths in configuration",
+            "instead": "Use workspace-relative paths or variables"
+        },
+        "monolithic_config": {
+            "description": "Don't put everything in one file",
+            "instead": "Separate concerns (copilot, cursor, cline, vscode)"
+        },
+        "undocumented_settings": {
+            "description": "Every setting should have a comment",
+            "instead": "Add inline comments explaining WHY, not WHAT"
+        },
+        "language_conflicts": {
+            "description": "Multiple formatters for same language",
+            "instead": "One default formatter per language in settings"
+        }
+    },
+    "usage": {
+        "search_before_build": "Check this file before creating new patterns",
+        "update_on_discovery": "Add new patterns as they emerge",
+        "validate_consistency": "Ensure new patterns don't contradict existing ones"
+    }
+}

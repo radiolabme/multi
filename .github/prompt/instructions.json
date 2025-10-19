@@ -1,0 +1,322 @@
+{
+    "workspace": {
+        "name": "GitHub Copilot Workspace",
+        "purpose": "Enhance GitHub Copilot capabilities with automation tools and consistent development patterns"
+    },
+    "engineering_protocol": {
+        "complexity_classification": {
+            "fast_path": {
+                "condition": "Δlines < 10 ∧ Δfiles ≤ 1 ∧ solution_clear",
+                "sequence": [
+                    "Search",
+                    "Match",
+                    "Apply",
+                    "Verify"
+                ]
+            },
+            "full_protocol": {
+                "condition": "complex changes",
+                "sequence": [
+                    "Read state",
+                    "Analyze",
+                    "Plan",
+                    "Implement",
+                    "Verify"
+                ]
+            }
+        },
+        "core_loop": [
+            {
+                "perspective_scale": "Minimum perspectives revealing necessary boundaries"
+            },
+            {
+                "assumption_audit": "Identify assumptions, hidden constraints, mutable state"
+            },
+            {
+                "search_before_build": "Check codebase, patterns, existing solutions"
+            },
+            {
+                "context_compression": "Reduce to minimal invariants, update .claude/state.md"
+            },
+            {
+                "boundary_verification": "Validate types, layers, async patterns, goals alignment"
+            },
+            {
+                "type_safety": "Make invalid states unrepresentable at boundaries"
+            }
+        ],
+        "meta_operations": {
+            "offload": [
+                "scripts",
+                "MCP servers",
+                "CI/CD"
+            ],
+            "automate": [
+                "declarative tools",
+                "webhooks"
+            ],
+            "remove": [
+                "Unused code",
+                "files",
+                "frameworks",
+                "dependencies"
+            ]
+        },
+        "anti_patterns": [
+            "Reinventing existing solutions",
+            "Logic loops and circular dependencies",
+            "Unvalidated assumptions",
+            "Dead code retention",
+            "Over-analysis of simple tasks",
+            "Under-analysis of complex tasks"
+        ],
+        "state_persistence": {
+            "files": {
+                "state": ".claude/state.md",
+                "goals": ".claude/goals.md",
+                "patterns": ".claude/patterns.json",
+                "cache": ".claude/cache/"
+            },
+            "update_trigger": "Architectural changes beyond threshold"
+        }
+    },
+    "code_quality": {
+        "standards": {
+            "maintainability": true,
+            "documentation": true,
+            "readability_over_cleverness": true,
+            "meaningful_names": true,
+            "comments": "complex logic only"
+        },
+        "architecture": {
+            "principles": [
+                "SOLID"
+            ],
+            "composition_over_inheritance": true,
+            "function_focus": "single responsibility",
+            "explicit_over_implicit": true,
+            "design_for_testability": true
+        },
+        "error_handling": {
+            "graceful": true,
+            "meaningful_messages": true,
+            "appropriate_types": true,
+            "never_swallow_exceptions": true,
+            "validate_inputs_at_boundaries": true
+        },
+        "testing": {
+            "unit_tests": "business logic",
+            "integration_tests": "critical paths",
+            "coverage": "high on core functionality",
+            "naming": "descriptive, explain scenario",
+            "pattern": "AAA (Arrange, Act, Assert)"
+        },
+        "documentation": {
+            "public_apis": true,
+            "readme_current": true,
+            "usage_examples": true,
+            "dependencies": true,
+            "changelog": true
+        },
+        "security": {
+            "never": [
+                "commit secrets or credentials",
+                "trust unsanitized user inputs"
+            ],
+            "always": [
+                "sanitize user inputs",
+                "parameterized queries for databases",
+                "principle of least privilege",
+                "keep dependencies updated"
+            ]
+        },
+        "performance": {
+            "priority": "clarity first, performance second",
+            "profile_before_optimize": true,
+            "consider_complexity": true,
+            "appropriate_data_structures": true,
+            "cache_expensive_computations": true
+        }
+    },
+    "workspace_automation": {
+        "scripts": {
+            "dead_code_check": {
+                "file": "scripts/dead-code-check.sh",
+                "tools": [
+                    "TypeScript/knip",
+                    "Python/vulture",
+                    "Go/staticcheck"
+                ]
+            },
+            "setup_arch_linting": {
+                "file": "scripts/setup-arch-linting.sh",
+                "purpose": "Enforce architecture boundaries"
+            },
+            "mcp_cache": {
+                "file": "scripts/mcp-cache.sh",
+                "purpose": "Cache Model Context Protocol server registry"
+            },
+            "setup_git_hooks": {
+                "file": "scripts/setup-git-hooks.sh",
+                "purpose": "Install pre-commit validation"
+            },
+            "pattern_extract": {
+                "file": "scripts/pattern-extract.sh",
+                "purpose": "Analyze git patterns and workspace structure"
+            }
+        },
+        "vscode_tasks": [
+            "Full Workspace Setup",
+            "Check Dead Code",
+            "Workspace Status",
+            "Run All Tests"
+        ],
+        "git_hooks": {
+            "pre_commit": "Validates code quality, checks dead code, runs linters",
+            "commit_msg": "Enforces conventional commit format",
+            "post_commit": "Updates pattern tracking"
+        }
+    },
+    "language_guidelines": {
+        "python": {
+            "style_guide": "PEP 8",
+            "type_hints": true,
+            "formatting": "f-strings",
+            "comprehensions": "simple transformations",
+            "context_managers": true
+        },
+        "typescript": {
+            "features": "ES6+",
+            "const_over_let": true,
+            "never_var": true,
+            "async_await": true,
+            "type_safety": true,
+            "functional_patterns": true,
+            "interfaces": true,
+            "destructuring": true
+        },
+        "go": {
+            "guide": "effective Go",
+            "formatting": "gofmt",
+            "error_handling": "explicit, never ignore",
+            "cleanup": "defer",
+            "composition": "struct composition over embedding",
+            "tests": "table-driven"
+        },
+        "bash": {
+            "error_handling": "set -e",
+            "quote_variables": true,
+            "conditionals": "[[ ]] over [ ]",
+            "usage_messages": true,
+            "functions": "reusable logic",
+            "comments": "complex operations"
+        },
+        "java": {
+            "conventions": "Java naming",
+            "collections": "streams API",
+            "immutability": true,
+            "nullable": "Optional",
+            "structure": "Maven/Gradle standard"
+        },
+        "csharp": {
+            "conventions": "Microsoft naming",
+            "collections": "LINQ",
+            "async_await": true,
+            "nullable_reference_types": true,
+            "patterns": ".NET standard"
+        }
+    },
+    "best_practices": {
+        "solid_principles": {
+            "single_responsibility": "Each class/function does one thing",
+            "open_closed": "Open for extension, closed for modification",
+            "liskov_substitution": "Subtypes must be substitutable for base types",
+            "interface_segregation": "Many specific interfaces > one general interface",
+            "dependency_inversion": "Depend on abstractions, not concretions"
+        },
+        "design_patterns": {
+            "use": [
+                "Factory",
+                "Strategy",
+                "Observer",
+                "Decorator",
+                "Repository"
+            ],
+            "avoid": [
+                "God objects",
+                "circular dependencies",
+                "deep inheritance hierarchies"
+            ]
+        },
+        "file_organization": {
+            "structure": {
+                "src": {
+                    "core": "Core business logic",
+                    "api": "API/interface layer",
+                    "utils": "Utility functions",
+                    "models": "Data models"
+                },
+                "tests": "Mirror src structure",
+                "docs": "Documentation",
+                "config": "Configuration files",
+                "scripts": "Build/deployment scripts"
+            }
+        },
+        "naming_conventions": {
+            "files": {
+                "python": "snake_case.py",
+                "typescript": "kebab-case.ts",
+                "java": "PascalCase.java"
+            },
+            "classes": "PascalCase",
+            "functions": {
+                "python": "snake_case",
+                "typescript": "camelCase",
+                "java": "camelCase"
+            },
+            "constants": "UPPER_CASE",
+            "private": {
+                "python": "_leading_underscore",
+                "typescript": "private fields"
+            }
+        }
+    },
+    "git_version_control": {
+        "commit_messages": "clear, descriptive, conventional commits",
+        "commits": "atomic (one logical change)",
+        "branches": {
+            "feature": "feature/*",
+            "bugfix": "bugfix/*",
+            "hotfix": "hotfix/*"
+        },
+        "pr_descriptions": "meaningful",
+        "self_review": true,
+        "pre_commit_checks": [
+            "run tests",
+            "format code",
+            "check linting",
+            "update documentation"
+        ]
+    },
+    "workflow_preferences": {
+        "organization": "by feature/domain, not by type",
+        "proximity": "keep related files close",
+        "separation": "business logic, UI, data access",
+        "naming": "clear folder conventions",
+        "consistency": true,
+        "state_management": {
+            "state_file": ".claude/state.md",
+            "goals_file": ".claude/goals.md",
+            "patterns_file": ".claude/patterns.json",
+            "cache_dir": ".claude/cache/"
+        }
+    },
+    "communication_style": {
+        "concise": true,
+        "complete": true,
+        "markdown_formatting": true,
+        "code_examples": true,
+        "documentation_links": true,
+        "clarifying_questions": true
+    }
+}

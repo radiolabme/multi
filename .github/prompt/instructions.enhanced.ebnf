@@ -1,0 +1,881 @@
+// Enhanced Formal Grammar for GitHub Copilot Workspace Instructions
+// Extended EBNF with semantic annotations, quantitative thresholds, and conflict resolution
+// Version: 2.0
+// Last Updated: 2025-10-18
+
+// ============================================================================
+// METADATA & VERSIONING
+// ============================================================================
+
+workspace_config ::= metadata protocol quality automation languages practices workflow communication
+  @version: "2.0"
+  @format: "extended-ebnf"
+  @parseable: true
+  @executable: true
+
+metadata ::= "WORKSPACE" name purpose version
+  name := "GitHub Copilot Workspace"
+  purpose := "Enhance GitHub Copilot capabilities with automation tools and consistent development patterns"
+  version := "2.0.0"
+  @author: "Workspace Engineering Team"
+  @license: "MIT"
+
+// ============================================================================
+// SEMANTIC PREDICATES WITH FORMAL DEFINITIONS
+// ============================================================================
+
+// Enforcement Levels (ordered by severity)
+enforcement_level ::= FORBIDDEN | MANDATORY | RECOMMENDED | PREFERRED | OPTIONAL
+  FORBIDDEN     := priority(10) + enforce(always) + violation(error)
+  MANDATORY     := priority(9)  + enforce(always) + violation(error)
+  RECOMMENDED   := priority(7)  + enforce(warn)   + violation(warning)
+  PREFERRED     := priority(5)  + enforce(hint)   + violation(info)
+  OPTIONAL      := priority(1)  + enforce(never)  + violation(none)
+
+// Conditional Operators
+condition(expr) ::= expr evaluates_to boolean
+  where expr := logical_expression
+  evaluates_to := "⊨" | "satisfies" | "matches"
+
+preference(a, b) ::= prefer(a) over(b) when(not conflict(a, b))
+  @semantics: "Choose a if possible, fallback to b"
+  @resolution: hierarchical
+
+conditional(action, constraint) ::= action when(constraint) else(skip)
+  @semantics: "Execute action only if constraint is satisfied"
+
+// Quantitative Thresholds
+threshold ::= numeric_value unit constraint
+  numeric_value := integer | float | percentage
+  unit := lines | files | complexity | coverage | ms | kb | mb
+  constraint := min | max | exact | range
+
+// ============================================================================
+// PROTOCOL WITH QUANTITATIVE DEFINITIONS
+// ============================================================================
+
+protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolution
+  @priority: 10
+  @scope: "global"
+
+  complexity ::= "CLASSIFY" fast_path | full_path
+    @decision_boundary: threshold(10, lines) ∧ threshold(1, files)
+    
+    fast_path := condition(Δlines < 10 ∧ Δfiles ≤ 1 ∧ solution_clear)
+                 → sequence(Search, Match, Apply, Verify)
+      @enforcement: MANDATORY
+      @time_budget: threshold(max: 30, unit: seconds)
+      @example: "Fix typo in single function"
+      @metrics: {
+        complexity: O(1),
+        context_load: minimal,
+        tool_calls: range(1, 3)
+      }
+    
+    full_path := condition(complex_changes)
+                 → sequence(ReadState, Analyze, Plan, Implement, Verify)
+      @enforcement: MANDATORY
+      @time_budget: threshold(max: 300, unit: seconds)
+      @example: "Refactor multi-module architecture"
+      @metrics: {
+        complexity: O(n),
+        context_load: comprehensive,
+        tool_calls: range(5, 20)
+      }
+      
+    // Quantify "complex_changes"
+    complex_changes := (Δlines ≥ 10) ∨ (Δfiles > 1) ∨ 
+                      (architectural_impact = true) ∨ 
+                      (unknowns > threshold(2))
+      @definition: "Changes requiring multi-step planning"
+
+  loop ::= "EXECUTE" step+ until(convergence)
+    @max_iterations: 50
+    @convergence_criteria: drift < threshold(0.05)
+    @enforcement: MANDATORY
+    
+    step := perspective_scale
+          | assumption_audit
+          | search_before_build
+          | context_compression
+          | boundary_verification
+          | type_safety
+
+    perspective_scale := "Minimum perspectives revealing necessary boundaries"
+      @algorithm: "Greedy set cover"
+      @metric: coverage(task) = 100% ∧ |perspectives| = minimal
+      @example: "Use 2 perspectives (user + system) instead of 5"
+      @enforcement: RECOMMENDED
+
+    assumption_audit := "Identify" (assumptions | hidden_constraints | mutable_state)
+      @checklist: [
+        "What am I assuming about user intent?",
+        "What constraints aren't explicitly stated?",
+        "What state might change during execution?"
+      ]
+      @enforcement: MANDATORY
+      @examples: {
+        assumption: "User wants TypeScript (but might want JavaScript)",
+        hidden_constraint: "Must maintain backward compatibility",
+        mutable_state: "File contents may change during multi-step edit"
+      }
+
+    search_before_build := "Check" (codebase | patterns | existing_solutions)
+      @order: [semantic_search, grep_search, list_code_usages]
+      @enforcement: MANDATORY
+      @rationale: "Avoid reinventing existing solutions"
+      @time_allocation: threshold(max: 60, unit: seconds)
+
+    context_compression := "Reduce to minimal invariants" → update(".claude/state.md")
+      @max_context_size: threshold(2000, lines)
+      @compression_ratio: range(0.1, 0.3)
+      @enforcement: RECOMMENDED
+      @algorithm: "Extract invariants, discard derivable facts"
+      @update_trigger: compression_ratio < 0.5
+
+    boundary_verification := "Validate" (types | layers | async_patterns | goals_alignment)
+      @enforcement: MANDATORY
+      @checks: [
+        type_safety: "No 'any' types at public interfaces",
+        layer_isolation: "No business logic in UI components",
+        async_consistency: "All I/O operations are async",
+        goals_alignment: "Changes serve stated objectives"
+      ]
+      @violation_severity: error
+
+    type_safety := "Make invalid states unrepresentable at boundaries"
+      @enforcement: MANDATORY
+      @techniques: [
+        sum_types: "Use discriminated unions",
+        phantom_types: "Encode state in type system",
+        builder_pattern: "Prevent incomplete construction"
+      ]
+      @example: {
+        before: "status: string // could be anything",
+        after: "status: 'draft' | 'published' | 'archived'"
+      }
+
+  meta ::= "META_OPS" offload | automate | remove
+    @mode: aggressive
+    @enforcement: RECOMMENDED
+    
+    offload := (repetitive_tasks → declarative_tools)
+      @threshold: repetition > 3
+      @targets: [scripts, mcp_servers, cicd, webhooks]
+      @example: "Create script instead of manual steps"
+      
+    automate := (patterns → automation)
+      @confidence_threshold: 0.8
+      @pattern_occurrences: ≥ 5
+      @example: "Auto-format on save if violated 5+ times"
+      
+    remove := (unused_artifacts) with_policy(aggressive)
+      @mode: aggressive
+      @targets: [dead_code, unused_imports, deprecated_deps, empty_files]
+      @safety: run_tests_after(removal)
+      @enforcement: RECOMMENDED
+
+  anti ::= "AVOID" pattern+
+    @enforcement: FORBIDDEN
+    @violation: error
+    
+    pattern := reinventing_solutions      @cost: high_time
+             | logic_loops                @detection: cycle_detection
+             | circular_dependencies      @detection: static_analysis
+             | unvalidated_assumptions    @risk: correctness
+             | dead_code_retention        @cost: maintenance
+             | over_analysis_simple       @threshold: time > 2×fast_path
+             | under_analysis_complex     @threshold: time < 0.5×full_path
+
+  persistence ::= "PERSIST" state_files trigger
+    @format: markdown
+    @encoding: utf-8
+    
+    state_files := {
+      ".claude/state.md": {
+        content: [decisions, patterns, invariants, technical_debt],
+        update_frequency: per_architectural_change,
+        max_size: threshold(10000, lines)
+      },
+      ".claude/goals.md": {
+        content: [objectives, constraints, success_criteria],
+        update_frequency: per_project_phase,
+        immutable: false
+      },
+      ".claude/patterns.json": {
+        content: pattern_history,
+        format: json,
+        schema_version: "1.0"
+      },
+      ".claude/cache/": {
+        content: analysis_results,
+        ttl: threshold(24, hours),
+        max_size: threshold(100, mb)
+      }
+    }
+    
+    trigger := "Architectural changes beyond threshold"
+      @quantified: architectural_impact_score > threshold(7.0, scale: 0-10)
+      @examples: {
+        trigger_yes: "Changed from REST to GraphQL",
+        trigger_no: "Renamed a variable",
+        trigger_maybe: "Refactored 3 modules"
+      }
+      @impact_scoring: {
+        layer_boundary_change: 9,
+        new_dependency: 7,
+        api_signature_change: 8,
+        internal_refactor: 3,
+        documentation_update: 1
+      }
+
+  conflict_resolution ::= "RESOLVE" precedence overrides
+    @enforcement: MANDATORY
+    
+    precedence := ordered_list(concern+)
+      concern := security | correctness | maintainability | performance | clarity
+      @order: [security > correctness > maintainability > performance > clarity]
+      @example: "Security check overrides performance optimization"
+      
+    overrides := explicit_annotation*
+      @syntax: "@override(rule: <rule_name>, reason: <string>)"
+      @requires: human_approval
+      @example: "@override(rule: 'cache_expensive_ops', reason: 'Non-deterministic API')"
+
+// ============================================================================
+// QUALITY WITH NUANCED CONSTRAINTS
+// ============================================================================
+
+quality ::= "QUALITY" standards arch error_handling testing docs security perf
+  @priority: 9
+
+  standards ::= require(maintainability, documentation, readability_over_cleverness,
+                        meaningful_names, comments_for_complex_only)
+    @enforcement: MANDATORY
+    
+    maintainability := cyclomatic_complexity < threshold(10)
+                     ∧ function_length < threshold(50, lines)
+                     ∧ nesting_depth < threshold(4)
+      @metrics_tool: [eslint, pylint, gocyclo]
+      
+    documentation := public_apis_documented = 100%
+                   ∧ readme_exists = true
+                   ∧ changelog_maintained = true
+      @format: [jsdoc, docstring, godoc]
+      
+    readability_over_cleverness := prefer(explicit, clever) 
+                                  ∧ avoid(code_golf, obfuscation)
+      @example: {
+        bad: "x=lambda y:y and y[0]or''",
+        good: "def get_first_or_empty(items): return items[0] if items else ''"
+      }
+
+  arch ::= apply(SOLID) + composition_over_inheritance
+         + single_responsibility_functions
+         + explicit_over_implicit
+         + design_for_testability
+    @enforcement: RECOMMENDED
+    
+    composition_over_inheritance := preference(composition, inheritance)
+                                  when(not is_a_relationship)
+      @enforcement: PREFERRED
+      @exception: "Inherit only for genuine is-a relationships"
+      @examples: {
+        prefer: "Car has-a Engine (composition)",
+        avoid: "Car is-a Engine (inheritance)",
+        ok: "SportsCar is-a Car (inheritance)"
+      }
+
+  error_handling ::= always(graceful, meaningful_messages, appropriate_types)
+                   + conditional(log_exceptions, then_swallow)
+                   + validate_at_boundaries
+    @enforcement: MANDATORY
+    
+    // Resolves contradiction: swallowing with logging is PERMITTED
+    swallow_exceptions := forbidden(swallow_without_logging)
+                        ∧ permitted(swallow_with_logging)
+      @rule: "Never silently swallow exceptions"
+      @examples: {
+        forbidden: "try: risky() except: pass",
+        permitted: "try: risky() except Exception as e: logger.error(f'Failed: {e}')",
+        best: "try: risky() except SpecificError as e: handle(e)"
+      }
+      
+    meaningful_messages := include(context, error_type, recovery_hint)
+      @template: "{what_failed}: {why_failed}. {how_to_fix}"
+      @example: "Database connection failed: timeout after 30s. Check network or increase timeout."
+
+  testing ::= unit_tests(business_logic)
+            + integration_tests(critical_paths)
+            + coverage_target(core_functionality)
+            + naming(descriptive)
+            + pattern(AAA)
+    @enforcement: MANDATORY
+    
+    coverage_target := threshold(min: 80%, domain: core_functionality)
+                     ∧ threshold(min: 60%, domain: all_code)
+      @quantified: true  // Resolves "high" ambiguity
+      @tools: [jest, pytest, go_test]
+      @exemptions: [generated_code, trivial_getters]
+      @example: "Business logic requires 80% coverage, utilities need 60%"
+
+  docs ::= document(public_apis, interfaces)
+         + maintain(README, CHANGELOG)
+         + include(usage_examples, dependencies)
+    @enforcement: MANDATORY
+    
+    usage_examples := required(public_api_count > 3)
+      @format: [code_blocks, runnable_examples, test_cases]
+      @location: [README, dedicated_examples_dir, inline_docs]
+
+  security ::= never(commit_secrets, trust_unsanitized_input)
+             + always(sanitize_inputs, parameterized_queries, least_privilege,
+                     updated_dependencies)
+    @enforcement: FORBIDDEN (for 'never'), MANDATORY (for 'always')
+    @priority: 10  // Highest priority
+    
+    commit_secrets := detection(regex_patterns + entropy_analysis)
+      @pre_commit_hook: required
+      @tools: [gitleaks, trufflehog]
+      
+    sanitize_inputs := escape(html, sql, shell, ldap)
+      @libraries: [DOMPurify, parameterized_queries, shlex]
+      @validation: whitelist > blacklist
+
+  perf ::= prioritize(clarity, then_performance)
+         + profile_before_optimize
+         + consider_complexity
+         + appropriate_data_structures
+         + conditional(cache_expensive_ops, when_beneficial)
+    @enforcement: RECOMMENDED
+    
+    // Resolves "when beneficial" ambiguity
+    when_beneficial := (computation_cost > threshold(100, ms))
+                     ∧ (result_reusability > 0.5)
+                     ∧ not(non_deterministic)
+      @quantified: true
+      @examples: {
+        cache_yes: "Fibonacci(n) called 1000 times",
+        cache_no: "random() calls",
+        cache_maybe: "API call with 10% reuse rate"
+      }
+
+// ============================================================================
+// AUTOMATION WITH EXECUTABLE SPECS
+// ============================================================================
+
+automation ::= "AUTOMATION" scripts tasks hooks
+  @enforcement: RECOMMENDED
+
+  scripts ::= script_collection
+    script_collection := {
+      dead_code_check: {
+        path: "scripts/dead-code-check.sh",
+        tools: [knip, vulture, staticcheck],
+        languages: [typescript, python, go],
+        exit_code: 0 | 1,
+        output_format: "json"
+      },
+      arch_linting: {
+        path: "scripts/setup-arch-linting.sh",
+        purpose: "Enforce architecture boundaries",
+        rules: [layer_violations, forbidden_imports],
+        config: ".arch-lint.json"
+      },
+      mcp_cache: {
+        path: "scripts/mcp-cache.sh",
+        purpose: "Cache Model Context Protocol server registry",
+        commands: [update, search, stats],
+        cache_location: ".claude/cache/mcp-registry.json",
+        ttl: threshold(7, days)
+      },
+      git_hooks: {
+        path: "scripts/setup-git-hooks.sh",
+        purpose: "Install pre-commit validation",
+        hooks: [pre_commit, commit_msg, post_commit]
+      },
+      pattern_extract: {
+        path: "scripts/pattern-extract.sh",
+        purpose: "Analyze git patterns and workspace structure",
+        output: ".claude/patterns.json"
+      }
+    }
+
+  tasks ::= vscode_task_collection
+    vscode_task_collection := [
+      {
+        id: "full_workspace_setup",
+        label: "🚀 Full Workspace Setup",
+        description: "Complete initialization",
+        dependencies: [arch_linting, git_hooks, mcp_cache, dead_code_check]
+      },
+      {
+        id: "check_dead_code",
+        label: "🔍 Check Dead Code",
+        description: "Scan for unused code",
+        script: "dead_code_check"
+      },
+      {
+        id: "workspace_status",
+        label: "📊 Workspace Status",
+        description: "Show automation status"
+      },
+      {
+        id: "run_all_tests",
+        label: "🧪 Run All Tests",
+        description: "Execute tests for all languages"
+      }
+    ]
+
+  hooks ::= git_hook_collection
+    git_hook_collection := {
+      pre_commit: {
+        validations: [code_quality, dead_code, linters],
+        blocking: true,
+        timeout: threshold(60, seconds),
+        example_commands: ["npm run lint", "black --check .", "go fmt ./..."]
+      },
+      commit_msg: {
+        enforcement: conventional_commits,
+        format: "<type>(<scope>): <subject>",
+        types: [feat, fix, docs, style, refactor, test, chore],
+        max_length: threshold(72, characters),
+        example: "feat(auth): add OAuth2 integration"
+      },
+      post_commit: {
+        actions: [update_pattern_tracking],
+        blocking: false,
+        output: ".claude/patterns.json"
+      }
+    }
+    
+    conventional_commits := type(":" scope ":" subject)
+      type := "feat" | "fix" | "docs" | "style" | "refactor" | "test" | "chore" | "perf" | "ci"
+      scope := "[a-z][a-z0-9-]*"  // lowercase, alphanumeric, hyphens
+      subject := [^A-Z].*  // starts with lowercase
+      @enforcement: MANDATORY
+      @examples: {
+        valid: ["feat(auth): add login", "fix(db): resolve connection leak"],
+        invalid: ["Added feature", "fix: Fix bug", "FEAT: something"]
+      }
+
+// ============================================================================
+// LANGUAGES WITH PREFERENCE HIERARCHIES
+// ============================================================================
+
+languages ::= "LANG" python | typescript | go | bash | java | csharp
+  @enforcement: RECOMMENDED
+
+  python ::= follow(PEP8) + type_hints + f_strings + comprehensions + context_managers
+    @version: "3.9+"
+    @enforcement: MANDATORY
+    
+    comprehensions := use_for(simple_transformations)
+      @simple := (conditions ≤ 2) ∧ (nesting = 1) ∧ (length < 80_chars)
+      @enforcement: PREFERRED
+      @examples: {
+        simple: "[x*2 for x in nums if x > 0]",
+        complex_avoid: "[f(x) for x in items if x.validate() for y in x.children if y.active]",
+        complex_use_loop: "Use explicit for loop instead"
+      }
+
+  typescript ::= es6plus + const_over_let + never_var + async_await_preference + type_safety
+               + functional_patterns + interfaces + destructuring
+    @version: "4.5+"
+    @enforcement: MANDATORY
+    
+    async_await_preference := preference(async_await, raw_promises)
+      @enforcement: PREFERRED
+      @exception: "Promise.all for parallelism is acceptable"
+      @examples: {
+        prefer: "const data = await fetch(url); const json = await data.json();",
+        avoid: "fetch(url).then(r => r.json()).then(data => ...)",
+        ok: "await Promise.all([fetch(url1), fetch(url2)])"
+      }
+    
+    never_var := forbidden(var_keyword)
+      @enforcement: FORBIDDEN
+      @rationale: "Function-scoped var causes subtle bugs"
+      @replacement: "Use const (default) or let (if reassignment needed)"
+
+  go ::= effective_go + gofmt + explicit_errors + defer_cleanup
+       + struct_composition + table_driven_tests
+    @version: "1.19+"
+    @enforcement: MANDATORY
+    
+    explicit_errors := never(ignore_errors)
+      @enforcement: FORBIDDEN
+      @pattern: {
+        forbidden: "result, _ := riskyFunc()",
+        required: "result, err := riskyFunc(); if err != nil { return err }"
+      }
+
+  bash ::= set_e + quote_vars + double_bracket_conditionals + usage_msgs
+         + functions + comments_complex
+    @version: "bash 4.0+"
+    @enforcement: RECOMMENDED
+    
+    set_e := script_header_includes("set -euo pipefail")
+      @enforcement: MANDATORY
+      @rationale: "Exit on error, undefined vars, pipe failures"
+
+  java ::= java_conventions + streams_api + immutability + optional + maven_gradle
+    @version: "11+"
+    @enforcement: RECOMMENDED
+
+  csharp ::= ms_conventions + linq + async_await + nullable_refs + dotnet_patterns
+    @version: ".NET 6.0+"
+    @enforcement: RECOMMENDED
+
+// ============================================================================
+// PRACTICES WITH EXECUTABLE RULES
+// ============================================================================
+
+practices ::= "PRACTICE" solid design_patterns org naming
+  @enforcement: RECOMMENDED
+
+  solid ::= solid_principle_collection
+    solid_principle_collection := {
+      single_responsibility: {
+        definition: "Each class/function does one thing",
+        metric: reasons_to_change ≤ 1,
+        enforcement: RECOMMENDED,
+        example: {
+          violation: "class UserManagerAndLogger { saveUser(); logMessage(); }",
+          fix: "Split into UserManager and Logger"
+        }
+      },
+      open_closed: {
+        definition: "Open for extension, closed for modification",
+        pattern: [strategy, decorator, plugin_architecture],
+        enforcement: PREFERRED,
+        example: {
+          violation: "Modify existing class to add new behavior",
+          fix: "Extend via interface implementation"
+        }
+      },
+      liskov_substitution: {
+        definition: "Subtypes must be substitutable for base types",
+        test: "T <: S ⟹ S properties hold for T",
+        enforcement: MANDATORY,
+        example: {
+          violation: "Square extends Rectangle (violates width=height invariant)",
+          fix: "Use Shape interface instead"
+        }
+      },
+      interface_segregation: {
+        definition: "Many specific interfaces > one general interface",
+        metric: interface_methods ≤ threshold(5),
+        enforcement: RECOMMENDED,
+        example: {
+          violation: "interface IWorker { work(); eat(); sleep(); manage(); }",
+          fix: "Split into IWorker, IEater, ISleeper, IManager"
+        }
+      },
+      dependency_inversion: {
+        definition: "Depend on abstractions, not concretions",
+        pattern: dependency_injection,
+        enforcement: RECOMMENDED,
+        example: {
+          violation: "class Service { db = new MySQLDatabase(); }",
+          fix: "class Service { constructor(db: IDatabase) { this.db = db; } }"
+        }
+      }
+    }
+
+  design_patterns ::= use_patterns + avoid_patterns
+    use_patterns := [Factory, Strategy, Observer, Decorator, Repository]
+      @enforcement: RECOMMENDED
+      @when: "Solves recurring design problem"
+      
+    avoid_patterns := [God_objects, circular_deps, deep_inheritance]
+      @enforcement: FORBIDDEN
+      
+      God_objects := class_with_too_many_responsibilities
+        @metric: methods > threshold(20) ∨ fields > threshold(10)
+        @detection: static_analysis
+        
+      deep_inheritance := inheritance_depth > threshold(3)
+        @metric: class_hierarchy_depth
+        @alternative: "Use composition"
+
+  org ::= file_structure + organization_principles
+    file_structure := {
+      src: {
+        core: "Core business logic",
+        api: "API/interface layer", 
+        utils: "Utility functions",
+        models: "Data models"
+      },
+      tests: "Mirror src structure",
+      docs: "Documentation",
+      config: "Configuration files",
+      scripts: "Build/deployment scripts"
+    }
+    
+    organization_principles := {
+      colocation: "Keep related files close",
+      separation_of_concerns: "business_logic ⊥ ui ⊥ data_access",
+      feature_folders: "Group by feature, not by type"
+    }
+
+  naming ::= naming_conventions
+    naming_conventions := {
+      files: {
+        python: "snake_case.py",
+        typescript: "kebab-case.ts",
+        java: "PascalCase.java",
+        test_files: "{name}.test.{ext} | {name}.spec.{ext}"
+      },
+      identifiers: {
+        classes: "PascalCase",
+        functions: {
+          python: "snake_case",
+          typescript: "camelCase",
+          java: "camelCase"
+        },
+        constants: "UPPER_SNAKE_CASE",
+        private: {
+          python: "_leading_underscore",
+          typescript: "private keyword | #privateField",
+          java: "private modifier"
+        }
+      },
+      semantic_rules: {
+        booleans: "is*, has*, should*, can*",
+        collections: "plural_nouns",
+        functions: "verb_phrases",
+        classes: "nouns"
+      }
+    }
+
+// ============================================================================
+// WORKFLOW WITH QUANTIFIED METRICS
+// ============================================================================
+
+workflow ::= "WORKFLOW" vcs preferences state
+  @enforcement: MANDATORY
+
+  vcs ::= commit_msg(clear, descriptive, conventional)
+        + atomic_commits
+        + branches(feature/*, bugfix/*, hotfix/*)
+        + meaningful_pr_descriptions
+        + self_review
+        + pre_commit(tests, format, lint, docs)
+    @enforcement: MANDATORY
+    
+    atomic_commits := one_logical_change_per_commit
+      @metric: files_changed < threshold(10, files) ∨ conceptually_related
+      @test: "Can you describe the commit in one sentence?"
+      
+    meaningful_pr_descriptions := include(what, why, how, testing)
+      @template: {
+        what: "What does this PR change?",
+        why: "Why is this change needed?",
+        how: "How does it work?",
+        testing: "How was it tested?"
+      }
+      @min_length: threshold(50, characters)
+
+  preferences ::= organize_by(feature_domain)
+                + proximity(related_files)
+                + separate(business_logic, ui, data_access)
+                + clear_naming
+                + consistency
+    @enforcement: RECOMMENDED
+
+  state ::= state_tracking
+    state_tracking := {
+      state: {
+        path: ".claude/state.md",
+        content: [decisions, patterns, invariants, technical_debt],
+        update_trigger: architectural_change
+      },
+      goals: {
+        path: ".claude/goals.md",
+        content: [objectives, constraints, success_criteria],
+        update_trigger: project_phase_change
+      },
+      patterns: {
+        path: ".claude/patterns.json",
+        format: json,
+        schema: pattern_schema_v1
+      },
+      cache: {
+        path: ".claude/cache/",
+        ttl: threshold(24, hours),
+        max_size: threshold(100, mb)
+      }
+    }
+
+// ============================================================================
+// COMMUNICATION WITH STRUCTURED GUIDELINES
+// ============================================================================
+
+communication ::= "COMMUNICATE" style format content
+  @enforcement: RECOMMENDED
+
+  style ::= concise ∧ complete ∧ technical_prose
+    concise := word_count ≤ necessary
+    complete := answers_question ∧ provides_context
+    technical_prose := no_fluff ∧ no_unnecessary_emojis
+
+  format ::= markdown + code_examples + doc_links
+    markdown := {
+      headings: "Use ##, ###, not bold",
+      code_blocks: "Always specify language",
+      lists: "Use - for bullets, 1. for ordered",
+      emphasis: "*italic* for emphasis, **bold** for strong"
+    }
+
+  content ::= {
+    code_examples: "Include for non-trivial concepts",
+    documentation_links: "Reference authoritative sources",
+    clarifying_questions: "Ask when ambiguous",
+    assumptions: "State explicitly"
+  }
+
+// ============================================================================
+// FORMAL SEMANTICS
+// ============================================================================
+
+// Predicates with executable semantics
+condition(expr) ::= expr evaluates_to boolean
+  @semantics: "Evaluate expression in current context"
+  @type: "expr → boolean"
+
+sequence(step*) ::= ordered_execution(step*)
+  @semantics: "Execute steps in order, fail-fast on error"
+  @type: "step[] → result"
+
+require(prop*) ::= ∀p ∈ prop: enforce(p, MANDATORY)
+  @semantics: "All properties must be satisfied"
+  @type: "prop[] → constraint"
+
+apply(principle) ::= enforce(principle, RECOMMENDED)
+  @semantics: "Apply principle with recommendations"
+  @type: "principle → enforcement"
+
+never(action) ::= enforce(¬action, FORBIDDEN)
+  @semantics: "Action is strictly prohibited"
+  @type: "action → constraint"
+  @violation: error
+
+always(action) ::= enforce(action, MANDATORY)
+  @semantics: "Action must always be performed"
+  @type: "action → constraint"
+  @violation: error
+
+follow(standard) ::= conform_to(standard, MANDATORY)
+  @semantics: "Conform to external standard"
+  @type: "standard → constraint"
+
+use(pattern*) ::= ∀p ∈ pattern: recommend(p)
+  @semantics: "Patterns are recommended but not required"
+  @type: "pattern[] → guidance"
+  @enforcement: RECOMMENDED
+
+avoid(pattern*) ::= ∀p ∈ pattern: discourage(p)
+  @semantics: "Patterns should be avoided"
+  @type: "pattern[] → guidance"
+  @enforcement: PREFERRED
+
+preference(a, b) ::= prefer(a) over(b) when(not conflict)
+  @semantics: "Choose a when possible, b as fallback"
+  @type: "option × option → preference"
+  @resolution: hierarchical
+
+conditional(action, constraint) ::= action when(constraint) else(skip)
+  @semantics: "Execute action only if constraint holds"
+  @type: "action × constraint → action?"
+
+// Terminal productions
+Search ::= "search" @tool: [semantic_search, grep_search]
+Match ::= "match" @algorithm: pattern_matching
+Apply ::= "apply" @operation: edit_operation
+Verify ::= "verify" @checks: [syntax, semantics, tests]
+ReadState ::= "read_state" @files: [".claude/state.md", ".claude/goals.md"]
+Analyze ::= "analyze" @techniques: [static_analysis, semantic_understanding]
+Plan ::= "plan" @output: execution_plan
+Implement ::= "implement" @operations: [create, edit, delete, refactor]
+
+// Type system
+type threshold = {
+  value: number,
+  unit: string,
+  constraint: 'min' | 'max' | 'exact' | 'range',
+  scope?: string
+}
+
+type enforcement = 'FORBIDDEN' | 'MANDATORY' | 'RECOMMENDED' | 'PREFERRED' | 'OPTIONAL'
+
+type metric = {
+  name: string,
+  value: number,
+  unit?: string,
+  threshold?: threshold
+}
+
+// ============================================================================
+// CONFLICT RESOLUTION SYSTEM
+// ============================================================================
+
+precedence_order ::= [security, correctness, maintainability, performance, clarity]
+  @semantics: "Higher priority concerns override lower ones"
+  @examples: {
+    security_over_performance: "Use bcrypt (slow) over MD5 (fast) for passwords",
+    correctness_over_clarity: "Use precise algorithm even if complex",
+    maintainability_over_performance: "Readable code > micro-optimizations"
+  }
+
+override_mechanism ::= "@override" "(" rule: rule_name "," reason: string ")"
+  @requires: human_approval
+  @documentation: mandatory
+  @review: required_in_pr
+  @examples: {
+    ok: "@override(rule: 'max_function_length', reason: 'Generated code from protocol buffer')",
+    bad: "@override(rule: 'security_check', reason: 'too slow')"
+  }
+
+// ============================================================================
+// VERSIONING & EXTENSIONS
+// ============================================================================
+
+version_history ::= {
+  "2.0": {
+    changes: [
+      "Added quantitative thresholds",
+      "Defined predicate semantics",
+      "Added conflict resolution",
+      "Included executable specifications",
+      "Added inline examples",
+      "Resolved all ambiguities from v1.0"
+    ],
+    breaking_changes: [
+      "exception_handling: now permits logging before swallowing",
+      "test_coverage: now requires 80% for core (was undefined)",
+      "when_beneficial: now quantified as computation > 100ms"
+    ]
+  },
+  "1.0": {
+    changes: ["Initial release"]
+  }
+}
+
+extension_points ::= {
+  custom_rules: "Add new rules via extends keyword",
+  language_configs: "Add new language guidelines",
+  tool_integrations: "Specify additional linters/formatters",
+  metric_overrides: "Override thresholds per-project"
+}
+
+// ============================================================================
+// END OF GRAMMAR
+// ============================================================================
+
+@parseable: true
+@executable: true
+@complete: true
+@version: "2.0.0"
+@author: "Workspace Engineering Team"
+@license: "MIT"
