@@ -60,7 +60,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
 
   complexity ::= "CLASSIFY" fast_path | full_path
     @decision_boundary: threshold(10, lines) ∧ threshold(1, files)
-    
+
     fast_path := condition(Δlines < 10 ∧ Δfiles ≤ 1 ∧ solution_clear)
                  → sequence(Search, Match, Apply, Verify)
       @enforcement: MANDATORY
@@ -71,7 +71,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
         context_load: minimal,
         tool_calls: range(1, 3)
       }
-    
+
     full_path := condition(complex_changes)
                  → sequence(ReadState, Analyze, Plan, Implement, Verify)
       @enforcement: MANDATORY
@@ -82,10 +82,10 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
         context_load: comprehensive,
         tool_calls: range(5, 20)
       }
-      
+
     // Quantify "complex_changes"
-    complex_changes := (Δlines ≥ 10) ∨ (Δfiles > 1) ∨ 
-                      (architectural_impact = true) ∨ 
+    complex_changes := (Δlines ≥ 10) ∨ (Δfiles > 1) ∨
+                      (architectural_impact = true) ∨
                       (unknowns > threshold(2))
       @definition: "Changes requiring multi-step planning"
 
@@ -93,7 +93,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
     @max_iterations: 50
     @convergence_criteria: drift < threshold(0.05)
     @enforcement: MANDATORY
-    
+
     step := perspective_scale
           | assumption_audit
           | search_before_build
@@ -158,17 +158,17 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
   meta ::= "META_OPS" offload | automate | remove
     @mode: aggressive
     @enforcement: RECOMMENDED
-    
+
     offload := (repetitive_tasks → declarative_tools)
       @threshold: repetition > 3
       @targets: [scripts, mcp_servers, cicd, webhooks]
       @example: "Create script instead of manual steps"
-      
+
     automate := (patterns → automation)
       @confidence_threshold: 0.8
       @pattern_occurrences: ≥ 5
       @example: "Auto-format on save if violated 5+ times"
-      
+
     remove := (unused_artifacts) with_policy(aggressive)
       @mode: aggressive
       @targets: [dead_code, unused_imports, deprecated_deps, empty_files]
@@ -178,7 +178,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
   anti ::= "AVOID" pattern+
     @enforcement: FORBIDDEN
     @violation: error
-    
+
     pattern := reinventing_solutions      @cost: high_time
              | logic_loops                @detection: cycle_detection
              | circular_dependencies      @detection: static_analysis
@@ -190,7 +190,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
   persistence ::= "PERSIST" state_files trigger
     @format: markdown
     @encoding: utf-8
-    
+
     state_files := {
       ".claude/state.md": {
         content: [decisions, patterns, invariants, technical_debt],
@@ -213,7 +213,7 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
         max_size: threshold(100, mb)
       }
     }
-    
+
     trigger := "Architectural changes beyond threshold"
       @quantified: architectural_impact_score > threshold(7.0, scale: 0-10)
       @examples: {
@@ -231,12 +231,12 @@ protocol ::= "PROTOCOL" complexity loop meta anti persistence conflict_resolutio
 
   conflict_resolution ::= "RESOLVE" precedence overrides
     @enforcement: MANDATORY
-    
+
     precedence := ordered_list(concern+)
       concern := security | correctness | maintainability | performance | clarity
       @order: [security > correctness > maintainability > performance > clarity]
       @example: "Security check overrides performance optimization"
-      
+
     overrides := explicit_annotation*
       @syntax: "@override(rule: <rule_name>, reason: <string>)"
       @requires: human_approval
@@ -252,18 +252,18 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
   standards ::= require(maintainability, documentation, readability_over_cleverness,
                         meaningful_names, comments_for_complex_only)
     @enforcement: MANDATORY
-    
+
     maintainability := cyclomatic_complexity < threshold(10)
                      ∧ function_length < threshold(50, lines)
                      ∧ nesting_depth < threshold(4)
       @metrics_tool: [eslint, pylint, gocyclo]
-      
+
     documentation := public_apis_documented = 100%
                    ∧ readme_exists = true
                    ∧ changelog_maintained = true
       @format: [jsdoc, docstring, godoc]
-      
-    readability_over_cleverness := prefer(explicit, clever) 
+
+    readability_over_cleverness := prefer(explicit, clever)
                                   ∧ avoid(code_golf, obfuscation)
       @example: {
         bad: "x=lambda y:y and y[0]or''",
@@ -275,7 +275,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
          + explicit_over_implicit
          + design_for_testability
     @enforcement: RECOMMENDED
-    
+
     composition_over_inheritance := preference(composition, inheritance)
                                   when(not is_a_relationship)
       @enforcement: PREFERRED
@@ -290,7 +290,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
                    + conditional(log_exceptions, then_swallow)
                    + validate_at_boundaries
     @enforcement: MANDATORY
-    
+
     // Resolves contradiction: swallowing with logging is PERMITTED
     swallow_exceptions := forbidden(swallow_without_logging)
                         ∧ permitted(swallow_with_logging)
@@ -300,7 +300,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
         permitted: "try: risky() except Exception as e: logger.error(f'Failed: {e}')",
         best: "try: risky() except SpecificError as e: handle(e)"
       }
-      
+
     meaningful_messages := include(context, error_type, recovery_hint)
       @template: "{what_failed}: {why_failed}. {how_to_fix}"
       @example: "Database connection failed: timeout after 30s. Check network or increase timeout."
@@ -311,7 +311,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
             + naming(descriptive)
             + pattern(AAA)
     @enforcement: MANDATORY
-    
+
     coverage_target := threshold(min: 80%, domain: core_functionality)
                      ∧ threshold(min: 60%, domain: all_code)
       @quantified: true  // Resolves "high" ambiguity
@@ -323,7 +323,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
          + maintain(README, CHANGELOG)
          + include(usage_examples, dependencies)
     @enforcement: MANDATORY
-    
+
     usage_examples := required(public_api_count > 3)
       @format: [code_blocks, runnable_examples, test_cases]
       @location: [README, dedicated_examples_dir, inline_docs]
@@ -333,11 +333,11 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
                      updated_dependencies)
     @enforcement: FORBIDDEN (for 'never'), MANDATORY (for 'always')
     @priority: 10  // Highest priority
-    
+
     commit_secrets := detection(regex_patterns + entropy_analysis)
       @pre_commit_hook: required
       @tools: [gitleaks, trufflehog]
-      
+
     sanitize_inputs := escape(html, sql, shell, ldap)
       @libraries: [DOMPurify, parameterized_queries, shlex]
       @validation: whitelist > blacklist
@@ -348,7 +348,7 @@ quality ::= "QUALITY" standards arch error_handling testing docs security perf
          + appropriate_data_structures
          + conditional(cache_expensive_ops, when_beneficial)
     @enforcement: RECOMMENDED
-    
+
     // Resolves "when beneficial" ambiguity
     when_beneficial := (computation_cost > threshold(100, ms))
                      ∧ (result_reusability > 0.5)
@@ -448,7 +448,7 @@ automation ::= "AUTOMATION" scripts tasks hooks
         output: ".claude/patterns.json"
       }
     }
-    
+
     conventional_commits := type(":" scope ":" subject)
       type := "feat" | "fix" | "docs" | "style" | "refactor" | "test" | "chore" | "perf" | "ci"
       scope := "[a-z][a-z0-9-]*"  // lowercase, alphanumeric, hyphens
@@ -469,7 +469,7 @@ languages ::= "LANG" python | typescript | go | bash | java | csharp
   python ::= follow(PEP8) + type_hints + f_strings + comprehensions + context_managers
     @version: "3.9+"
     @enforcement: MANDATORY
-    
+
     comprehensions := use_for(simple_transformations)
       @simple := (conditions ≤ 2) ∧ (nesting = 1) ∧ (length < 80_chars)
       @enforcement: PREFERRED
@@ -483,7 +483,7 @@ languages ::= "LANG" python | typescript | go | bash | java | csharp
                + functional_patterns + interfaces + destructuring
     @version: "4.5+"
     @enforcement: MANDATORY
-    
+
     async_await_preference := preference(async_await, raw_promises)
       @enforcement: PREFERRED
       @exception: "Promise.all for parallelism is acceptable"
@@ -492,7 +492,7 @@ languages ::= "LANG" python | typescript | go | bash | java | csharp
         avoid: "fetch(url).then(r => r.json()).then(data => ...)",
         ok: "await Promise.all([fetch(url1), fetch(url2)])"
       }
-    
+
     never_var := forbidden(var_keyword)
       @enforcement: FORBIDDEN
       @rationale: "Function-scoped var causes subtle bugs"
@@ -502,7 +502,7 @@ languages ::= "LANG" python | typescript | go | bash | java | csharp
        + struct_composition + table_driven_tests
     @version: "1.19+"
     @enforcement: MANDATORY
-    
+
     explicit_errors := never(ignore_errors)
       @enforcement: FORBIDDEN
       @pattern: {
@@ -514,7 +514,7 @@ languages ::= "LANG" python | typescript | go | bash | java | csharp
          + functions + comments_complex
     @version: "bash 4.0+"
     @enforcement: RECOMMENDED
-    
+
     set_e := script_header_includes("set -euo pipefail")
       @enforcement: MANDATORY
       @rationale: "Exit on error, undefined vars, pipe failures"
@@ -587,14 +587,14 @@ practices ::= "PRACTICE" solid design_patterns org naming
     use_patterns := [Factory, Strategy, Observer, Decorator, Repository]
       @enforcement: RECOMMENDED
       @when: "Solves recurring design problem"
-      
+
     avoid_patterns := [God_objects, circular_deps, deep_inheritance]
       @enforcement: FORBIDDEN
-      
+
       God_objects := class_with_too_many_responsibilities
         @metric: methods > threshold(20) ∨ fields > threshold(10)
         @detection: static_analysis
-        
+
       deep_inheritance := inheritance_depth > threshold(3)
         @metric: class_hierarchy_depth
         @alternative: "Use composition"
@@ -603,7 +603,7 @@ practices ::= "PRACTICE" solid design_patterns org naming
     file_structure := {
       src: {
         core: "Core business logic",
-        api: "API/interface layer", 
+        api: "API/interface layer",
         utils: "Utility functions",
         models: "Data models"
       },
@@ -612,7 +612,7 @@ practices ::= "PRACTICE" solid design_patterns org naming
       config: "Configuration files",
       scripts: "Build/deployment scripts"
     }
-    
+
     organization_principles := {
       colocation: "Keep related files close",
       separation_of_concerns: "business_logic ⊥ ui ⊥ data_access",
@@ -663,11 +663,11 @@ workflow ::= "WORKFLOW" vcs preferences state
         + self_review
         + pre_commit(tests, format, lint, docs)
     @enforcement: MANDATORY
-    
+
     atomic_commits := one_logical_change_per_commit
       @metric: files_changed < threshold(10, files) ∨ conceptually_related
       @test: "Can you describe the commit in one sentence?"
-      
+
     meaningful_pr_descriptions := include(what, why, how, testing)
       @template: {
         what: "What does this PR change?",
