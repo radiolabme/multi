@@ -362,3 +362,14 @@ api-docs/
 
 # Custom - Add your project-specific ignores below
 # -------------------------------------------------
+
+# Playwright
+/test-results/
+/playwright-report/
+/test/test-results/
+/test/playwright-report/
+/playwright/.cache/
+
+# Vitest
+/.vitest/
+/test/.vitest/

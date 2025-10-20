@@ -1,0 +1,229 @@
+/**
+ * Design Tokens
+ *
+ * Centralized design system values for the TipTap editor.
+ * These tokens ensure consistency across components and make theming easier.
+ */
+
+:root {
+  /* ========================================
+     Colors
+     ======================================== */
+
+  /* Primary Colors */
+  --color-primary: #667eea;
+  --color-primary-hover: #5568d3;
+  --color-primary-light: rgba(102, 126, 234, 0.1);
+  --color-primary-shadow: rgba(102, 126, 234, 0.3);
+
+  /* Text Colors */
+  --color-text-default: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-text-disabled: #9ca3af;
+
+  /* Background Colors */
+  --color-bg-white: #ffffff;
+  --color-bg-light: #f9fafb;
+  --color-bg-hover: #f3f4f6;
+  --color-bg-active: var(--color-primary);
+
+  /* Border Colors */
+  --color-border-default: #e5e7eb;
+  --color-border-light: #d1d5db;
+  --color-border-focus: var(--color-primary);
+  --color-border-disabled: #e5e7eb;
+
+  /* Code Colors */
+  --color-code-bg: #f3f4f6;
+  --color-code-text: #1f2937;
+
+  /* Quote Colors */
+  --color-quote-border: #e5e7eb;
+  --color-quote-bg: #f9fafb;
+
+  /* ========================================
+     Typography
+     ======================================== */
+
+  /* Font Families */
+  --font-family-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ========================================
+     Spacing
+     ======================================== */
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+
+  /* ========================================
+     Sizing
+     ======================================== */
+
+  /* Toolbar */
+  --toolbar-height: 50px;
+  --toolbar-button-size: 38px;
+  --toolbar-divider-height: 24px;
+  --toolbar-divider-width: 1px;
+
+  /* Editor */
+  --editor-max-width: 800px;
+  --editor-min-height: 400px;
+
+  /* ========================================
+     Borders
+     ======================================== */
+
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+
+  /* ========================================
+     Shadows
+     ======================================== */
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-focus: 0 0 0 3px var(--color-primary-light);
+  --shadow-button-hover: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-button-active: 0 2px 8px var(--color-primary-shadow);
+
+  /* ========================================
+     Transitions
+     ======================================== */
+
+  --transition-fast: 0.15s;
+  --transition-base: 0.2s;
+  --transition-slow: 0.3s;
+
+  --transition-timing: ease;
+
+  /* ========================================
+     Z-Index
+     ======================================== */
+
+  --z-index-base: 1;
+  --z-index-dropdown: 10;
+  --z-index-sticky: 100;
+  --z-index-modal: 1000;
+  --z-index-tooltip: 1100;
+
+  /* ========================================
+     Breakpoints (for reference in media queries)
+     ======================================== */
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* ========================================
+   Semantic Token Aliases
+   ======================================== */
+
+:root {
+  /* Button Tokens */
+  --button-text-default: var(--color-text-default);
+  --button-text-active: var(--color-text-inverse);
+  --button-text-disabled: var(--color-text-disabled);
+  --button-bg-default: transparent;
+  --button-bg-hover: var(--color-bg-hover);
+  --button-bg-active: var(--color-bg-active);
+  --button-border-default: var(--color-border-light);
+  --button-border-hover: var(--color-border-focus);
+  --button-border-active: var(--color-primary);
+  --button-size: var(--toolbar-button-size);
+  --button-font-size: var(--font-size-base);
+  --button-font-weight: var(--font-weight-medium);
+  --button-padding: var(--spacing-sm);
+  --button-border-radius: var(--border-radius-md);
+
+  /* Dropdown/Select Tokens */
+  --select-text: var(--color-text-default);
+  --select-bg: var(--color-bg-white);
+  --select-bg-hover: var(--color-bg-hover);
+  --select-border: var(--color-border-light);
+  --select-border-focus: var(--color-border-focus);
+  --select-height: var(--toolbar-button-size);
+  --select-padding-x: var(--spacing-md);
+  --select-padding-y: var(--spacing-sm);
+  --select-font-size: var(--font-size-sm);
+  --select-border-radius: var(--border-radius-md);
+
+  /* Editor Content Tokens */
+  --editor-text: var(--color-text-default);
+  --editor-bg: var(--color-bg-white);
+  --editor-padding: var(--spacing-lg);
+  --editor-font-family: var(--font-family-sans);
+  --editor-font-size: var(--font-size-base);
+  --editor-line-height: var(--line-height-normal);
+
+  /* Code Tokens */
+  --code-text: var(--color-code-text);
+  --code-bg: var(--color-code-bg);
+  --code-font-family: var(--font-family-mono);
+  --code-font-size: var(--font-size-sm);
+  --code-padding: var(--spacing-xs);
+  --code-border-radius: var(--border-radius-sm);
+
+  /* Code Block Tokens */
+  --code-block-bg: var(--color-code-bg);
+  --code-block-padding: var(--spacing-lg);
+  --code-block-border-radius: var(--border-radius-md);
+  --code-block-margin: var(--spacing-lg) 0;
+
+  /* Blockquote Tokens */
+  --quote-border: var(--color-quote-border);
+  --quote-bg: var(--color-quote-bg);
+  --quote-border-width: var(--border-width-thick);
+  --quote-padding: var(--spacing-lg);
+  --quote-margin: var(--spacing-lg) 0;
+  --quote-text-color: var(--color-text-muted);
+  --quote-border-radius: var(--border-radius-sm);
+
+  /* Horizontal Rule Tokens */
+  --hr-border: var(--color-border-default);
+  --hr-margin: var(--spacing-2xl) 0;
+
+  /* Heading Tokens */
+  --heading-font-weight: var(--font-weight-bold);
+  --heading-line-height: var(--line-height-tight);
+  --heading-margin-top: var(--spacing-xl);
+  --heading-margin-bottom: var(--spacing-md);
+}
