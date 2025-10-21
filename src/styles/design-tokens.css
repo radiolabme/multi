@@ -3,6 +3,11 @@
  *
  * Centralized design system values for the TipTap editor.
  * These tokens ensure consistency across components and make theming easier.
+ *
+ * Color palette: Modern, sophisticated design system
+ * - Deep blues and teals for primary actions
+ * - Warm accent colors for highlights
+ * - Clean grayscale for text and backgrounds
  */
 
 :root {
@@ -10,48 +15,71 @@
      Colors
      ======================================== */
 
-  /* Primary Colors */
-  --color-primary: #667eea;
-  --color-primary-hover: #5568d3;
-  --color-primary-light: rgba(102, 126, 234, 0.1);
-  --color-primary-shadow: rgba(102, 126, 234, 0.3);
+  /* Primary Colors - Deep blue/teal */
+  --color-primary: #0e7798;
+  --color-primary-hover: #0a5c78;
+  --color-primary-light: rgba(14, 119, 152, 0.1);
+  --color-primary-shadow: rgba(14, 119, 152, 0.25);
 
-  /* Text Colors */
-  --color-text-default: #1f2937;
-  --color-text-muted: #6b7280;
+  /* Secondary Colors - Teal accent */
+  --color-secondary: #12a2a4;
+  --color-secondary-hover: #0e8486;
+  --color-secondary-light: rgba(18, 162, 164, 0.1);
+  --color-secondary-shadow: rgba(18, 162, 164, 0.25);
+
+  /* Tertiary Color - Warm yellow/orange accent */
+  --color-accent: #f9a445;
+  --color-accent-hover: #e89230;
+  --color-accent-light: rgba(249, 164, 69, 0.1);
+  --color-accent-shadow: rgba(249, 164, 69, 0.25);
+
+  /* Alert/Error Color - Deep red */
+  --color-error: #d70e0e;
+  --color-error-hover: #b00c0c;
+  --color-error-light: rgba(215, 14, 14, 0.1);
+  --color-error-shadow: rgba(215, 14, 14, 0.25);
+
+  /* Text Colors - Modern grayscale */
+  --color-text-default: #2c2c2c;
+  --color-text-muted: #58585a;
+  --color-text-light: #99989e;
   --color-text-inverse: #ffffff;
-  --color-text-disabled: #9ca3af;
+  --color-text-disabled: #99989e;
 
-  /* Background Colors */
+  /* Background Colors - Clean, minimal */
   --color-bg-white: #ffffff;
-  --color-bg-light: #f9fafb;
-  --color-bg-hover: #f3f4f6;
+  --color-bg-light: #f5f5f5;
+  --color-bg-hover: #e8e8e8;
   --color-bg-active: var(--color-primary);
+  --color-bg-dark: #2c2c2c;
+  --color-bg-medium: #58585a;
 
   /* Border Colors */
-  --color-border-default: #e5e7eb;
-  --color-border-light: #d1d5db;
+  --color-border-default: #e8e8e8;
+  --color-border-light: #f5f5f5;
+  --color-border-medium: #99989e;
   --color-border-focus: var(--color-primary);
-  --color-border-disabled: #e5e7eb;
+  --color-border-disabled: #e8e8e8;
 
   /* Code Colors */
-  --color-code-bg: #f3f4f6;
-  --color-code-text: #1f2937;
+  --color-code-bg: #f5f5f5;
+  --color-code-text: #2c2c2c;
 
   /* Quote Colors */
-  --color-quote-border: #e5e7eb;
-  --color-quote-bg: #f9fafb;
+  --color-quote-border: var(--color-secondary);
+  --color-quote-bg: var(--color-bg-light);
 
   /* ========================================
      Typography
      ======================================== */
 
-  /* Font Families */
-  --font-family-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-family-mono:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  /* Font Families - Self-hosted, no fallbacks needed */
+  --font-family-sans: 'Overused Grotesk', sans-serif;
+  --font-family-geist: 'Geist', sans-serif;
+  --font-family-serif: 'Noto Serif JP', serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+  --font-family-geist-mono: 'Geist Mono', monospace;
+  --font-family-math: 'Libertinus Math', serif;
 
   /* Font Sizes */
   --font-size-xs: 12px;
@@ -93,8 +121,23 @@
   /* Toolbar */
   --toolbar-height: 50px;
   --toolbar-button-size: 38px;
+  --toolbar-button-size-mobile: 32px;
   --toolbar-divider-height: 24px;
   --toolbar-divider-width: 1px;
+  --toolbar-scrollbar-height: 6px;
+
+  /* Select/Dropdown */
+  --select-font-min-width: 150px;
+  --select-font-min-width-mobile: 120px;
+
+  /* Icon Sizes */
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+
+  /* Typography Button */
+  --typography-icon-size: 16px;
+  --typography-icon-size-mobile: 14px;
 
   /* Editor */
   --editor-max-width: 800px;
@@ -122,6 +165,20 @@
   --shadow-focus: 0 0 0 3px var(--color-primary-light);
   --shadow-button-hover: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-button-active: 0 2px 8px var(--color-primary-shadow);
+
+  /* ========================================
+     Opacity
+     ======================================== */
+
+  --opacity-disabled: 0.4;
+  --opacity-hover: 0.9;
+
+  /* ========================================
+     Focus/Outline
+     ======================================== */
+
+  --focus-outline-width: 2px;
+  --focus-outline-offset: 2px;
 
   /* ========================================
      Transitions
@@ -165,7 +222,7 @@
   --button-bg-default: transparent;
   --button-bg-hover: var(--color-bg-hover);
   --button-bg-active: var(--color-bg-active);
-  --button-border-default: var(--color-border-light);
+  --button-border-default: var(--color-default-border);
   --button-border-hover: var(--color-border-focus);
   --button-border-active: var(--color-primary);
   --button-size: var(--toolbar-button-size);

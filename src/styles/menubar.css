@@ -1,0 +1,399 @@
+/**
+ * MenuBar Styles
+ *
+ * Consolidated, simplified toolbar/menubar styling for the TipTap editor.
+ * Uses design tokens from design-tokens.css for consistency.
+ */
+
+/* ========================================
+   MenuBar Container
+   ======================================== */
+
+.simple-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-bg-muted);
+  border-bottom: var(--border-width-medium) solid var(--color-border-default);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  font-family: var(--font-family-geist);
+}
+
+/* Scrollbar styling */
+.simple-editor-toolbar::-webkit-scrollbar {
+  height: var(--toolbar-scrollbar-height);
+}
+
+.simple-editor-toolbar::-webkit-scrollbar-track {
+  background: var(--color-bg-hover);
+}
+
+.simple-editor-toolbar::-webkit-scrollbar-thumb {
+  background: var(--color-text-disabled);
+  border-radius: var(--border-radius-sm);
+}
+
+.simple-editor-toolbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ========================================
+   Toolbar Buttons
+   ======================================== */
+
+.simple-editor-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--button-size);
+  height: var(--button-size);
+  padding: var(--button-padding) var(--spacing-md);
+  background: var(--button-bg-default);
+  border: var(--border-width-thin) solid var(--button-border-default);
+  border-radius: var(--button-border-radius);
+  color: var(--button-text-default);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  font-family: var(--font-family-geist);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition-base) var(--transition-timing);
+}
+
+.simple-editor-toolbar button:hover:not(:disabled) {
+  background: var(--button-bg-hover);
+  border-color: var(--button-border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.simple-editor-toolbar button:active:not(:disabled) {
+  background: var(--color-bg-hover);
+  transform: translateY(0);
+}
+
+/* Active state for toolbar buttons */
+.simple-editor-toolbar button.is-active {
+  background: var(--button-bg-active);
+  color: var(--button-text-active);
+  box-shadow: var(--shadow-button-active);
+}
+
+.simple-editor-toolbar button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.simple-editor-toolbar button:focus-visible {
+  outline: var(--focus-outline-width) solid var(--color-primary);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* ========================================
+   Toolbar Divider
+   ======================================== */
+
+.toolbar-divider {
+  width: var(--toolbar-divider-width);
+  height: var(--toolbar-divider-height);
+  background: var(--color-border-default);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ========================================
+   Select Controls (Heading, Font)
+   ======================================== */
+
+.toolbar-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  height: var(--select-height);
+  padding: var(--select-padding-y) var(--select-padding-x);
+  background: var(--select-bg);
+  border: var(--border-width-thin) solid var(--select-border);
+  border-radius: var(--select-border-radius);
+  color: var(--select-text);
+  font-size: var(--select-font-size);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-geist);
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: all var(--transition-base) var(--transition-timing);
+}
+
+.toolbar-dropdown-trigger:hover {
+  background: var(--select-bg-hover);
+  border-color: var(--select-border-focus);
+}
+
+.toolbar-dropdown-trigger:focus-visible {
+  outline: none;
+  border-color: var(--select-border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.heading-select {
+  min-width: 150px;
+}
+
+.font-select {
+  min-width: var(--select-font-min-width);
+}
+
+.toolbar-dropdown-prefix {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+}
+
+.toolbar-dropdown-value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Paragraph icon */
+.heading-paragraph-icon {
+  font-family: var(--font-family-geist);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-md);
+}
+
+/* Heading dropdown item layout */
+.heading-icon {
+  display: inline-block;
+  min-width: 2.5rem;
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  margin-right: var(--spacing-sm);
+}
+
+.heading-label {
+  flex: 1;
+}
+
+.toolbar-dropdown-content {
+  font-family: var(--font-family-geist);
+  min-width: 180px;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-md);
+  border: var(--border-width-thin) solid var(--color-border-default);
+  background: var(--select-bg);
+  box-shadow: var(--shadow-md);
+}
+
+.toolbar-dropdown-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+.toolbar-dropdown-item {
+  font-family: var(--font-family-geist);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+}
+
+.toolbar-dropdown-item[data-state='checked'] {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary, #1f2937);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Toggle Group Styles */
+.toggle-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+}
+
+.toggle-group__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast) var(--transition-timing);
+  cursor: pointer;
+  position: relative;
+}
+
+.toggle-group__item:hover:not(:disabled) {
+  background-color: var(--color-bg-secondary);
+}
+
+.toggle-group__item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.toggle-group__item:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Active state - inverted colors */
+.toggle-group__item[data-state='on'] {
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+
+.toggle-group__item[data-state='on']:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.toolbar-text-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  font-family: var(--font-family-geist);
+  font-size: var(--icon-size-md);
+  font-weight: 350;
+  line-height: 1;
+  color: inherit;
+}
+
+.toolbar-text-icon--bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.toolbar-text-icon--italic {
+  font-style: italic;
+}
+
+.toolbar-text-icon--underline {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.toolbar-text-icon--strikethrough {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+/* ========================================
+   Typography Button
+   ======================================== */
+
+.typography-button {
+  min-width: var(--button-size) !important;
+  width: var(--button-size) !important;
+  padding: 0 !important;
+}
+
+.typography-button__icon {
+  font-size: var(--typography-icon-size);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-geist);
+  line-height: 1;
+}
+
+/* ========================================
+   Icon with Black Background
+   ======================================== */
+
+.icon-with-black-bg {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.icon-with-black-bg::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-color: #000;
+  border-radius: 3px;
+  z-index: 0;
+}
+
+.icon-with-black-bg svg {
+  position: relative;
+  z-index: 2;
+  filter: invert(1);
+}
+
+/* ========================================
+   Responsive Adjustments
+   ======================================== */
+
+@media (max-width: 768px) {
+  .simple-editor-toolbar {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+  }
+
+  .simple-editor-toolbar button {
+    min-width: var(--toolbar-button-size-mobile);
+    height: var(--toolbar-button-size-mobile);
+    padding: var(--spacing-xs);
+  }
+
+  .typography-button {
+    min-width: var(--toolbar-button-size-mobile) !important;
+    width: var(--toolbar-button-size-mobile) !important;
+  }
+
+  .typography-button__icon {
+    font-size: var(--typography-icon-size-mobile);
+  }
+
+  .font-select {
+    min-width: var(--select-font-min-width-mobile);
+    font-size: var(--font-size-xs);
+  }
+}

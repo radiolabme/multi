@@ -6,12 +6,8 @@
  */
 import type { Editor } from '@tiptap/react';
 import React from 'react';
-import {
-  BubbleMenuWrapper,
-  MenuButton,
-  MenuDivider,
-  whenInTable,
-} from '../menus';
+import { Icon } from '../icons';
+import { BubbleMenuWrapper, MenuButton, MenuDivider, whenInTable } from '../menus';
 
 export interface TableBubbleMenuProps {
   editor: Editor;
@@ -34,9 +30,10 @@ export interface TableBubbleMenuProps {
 
 export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
   editor,
-  showNavigation = true,
   cellAttributes = [],
 }) => {
+  const hasHeaderRow = editor.isActive('table', { headerRow: true });
+
   return (
     <BubbleMenuWrapper
       editor={editor}
@@ -49,14 +46,14 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().addRowBefore()}
         title="Add row above"
       >
-        ⬆
+        <Icon name="arrowUpOnSquareStack" size={16} />
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().addRowAfter().run()}
         disabled={!editor.can().addRowAfter()}
         title="Add row below"
       >
-        ⬇
+        <Icon name="arrowUpOnSquareStack" rotate={180} size={16} />
       </MenuButton>
       <MenuDivider />
       <MenuButton
@@ -64,14 +61,14 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().addColumnBefore()}
         title="Add column left"
       >
-        ⬅
+        <Icon name="arrowUpOnSquareStack" rotate={270} size={16} />
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().addColumnAfter().run()}
         disabled={!editor.can().addColumnAfter()}
         title="Add column right"
       >
-        ➡
+        <Icon name="arrowUpOnSquareStack" rotate={90} size={16} />
       </MenuButton>
       <MenuDivider />
       <MenuButton
@@ -79,21 +76,23 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().mergeCells()}
         title="Merge selected cells"
       >
-        ⤧
+        <Icon name="merge" size={16} />
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().splitCell().run()}
         disabled={!editor.can().splitCell()}
         title="Split cell"
       >
-        ⤨
+        <Icon name="split" size={16} />
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().mergeOrSplit().run()}
         disabled={!editor.can().mergeOrSplit()}
         title="Merge or split cells"
       >
-        ⤧/⤨
+        <Icon name="merge" size={14} />
+        /
+        <Icon name="split" size={14} />
       </MenuButton>
       <MenuDivider />
       <MenuButton
@@ -101,43 +100,16 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().toggleHeaderColumn()}
         title="Toggle header column"
       >
-        ⬍ H
+        <Icon name="header" size={16} />
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().toggleHeaderRow().run()}
         disabled={!editor.can().toggleHeaderRow()}
         title="Toggle header row"
+        isActive={hasHeaderRow}
       >
-        ⬍ H
+        <Icon name={hasHeaderRow ? 'headerRowEnabled' : 'headerRowDisabled'} size={16} />
       </MenuButton>
-      <MenuButton
-        onClick={() => editor.chain().focus().toggleHeaderCell().run()}
-        disabled={!editor.can().toggleHeaderCell()}
-        title="Toggle header cell"
-      >
-        H
-      </MenuButton>
-
-      {/* Navigation commands */}
-      {showNavigation && (
-        <>
-          <MenuDivider />
-          <MenuButton
-            onClick={() => editor.chain().focus().goToPreviousCell().run()}
-            disabled={!editor.can().goToPreviousCell()}
-            title="Go to previous cell"
-          >
-            ⇤
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().goToNextCell().run()}
-            disabled={!editor.can().goToNextCell()}
-            title="Go to next cell"
-          >
-            ⇥
-          </MenuButton>
-        </>
-      )}
 
       {/* Custom cell attributes */}
       {cellAttributes.length > 0 && (
@@ -164,14 +136,16 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().deleteColumn()}
         title="Delete column"
       >
-        🗑️ Col
+        <Icon name="remove" size={16} />
+        <span className="button-label">Col</span>
       </MenuButton>
       <MenuButton
         onClick={() => editor.chain().focus().deleteRow().run()}
         disabled={!editor.can().deleteRow()}
         title="Delete row"
       >
-        🗑️ Row
+        <Icon name="remove" size={16} />
+        <span className="button-label">Row</span>
       </MenuButton>
       <MenuDivider />
       <MenuButton
@@ -179,7 +153,8 @@ export const TableBubbleMenu: React.FC<TableBubbleMenuProps> = ({
         disabled={!editor.can().deleteTable()}
         title="Delete table"
       >
-        🗑️ Table
+        <Icon name="tableDelete" size={16} />
+        <span className="button-label">Table</span>
       </MenuButton>
     </BubbleMenuWrapper>
   );

@@ -1,20 +1,48 @@
 /* Import design tokens */
 @import '../styles/design-tokens.css';
 
-/* Shared bubble menu styles */
+/* ========================================
+   Bubble Menu Design Tokens
+   ======================================== */
+
+:root {
+  /* Bubble Menu Colors */
+  --bubble-menu-bg: rgba(15, 23, 42, 0.95);
+  --bubble-menu-text: var(--color-text-inverse);
+  --bubble-menu-border: rgba(148, 163, 184, 0.35);
+  --bubble-menu-button-hover-bg: rgba(148, 163, 184, 0.2);
+  --bubble-menu-button-active-bg: rgba(148, 163, 184, 0.3);
+  --bubble-menu-divider-bg: rgba(148, 163, 184, 0.3);
+
+  /* Bubble Menu Sizing */
+  --bubble-menu-padding: var(--spacing-sm);
+  --bubble-menu-button-size: 32px;
+  --bubble-menu-divider-height: 20px;
+
+  /* Bubble Menu Effects */
+  --bubble-menu-shadow: 0 12px 30px rgba(15, 23, 42, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --bubble-menu-backdrop-blur: 8px;
+}
+
+/* ========================================
+   Shared Bubble Menu Styles
+   ======================================== */
+
 .bubble-menu {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm);
-  background: rgba(15, 23, 42, 0.95);
-  color: var(--color-text-inverse);
+  padding: var(--bubble-menu-padding);
+  background: var(--bubble-menu-bg);
+  color: var(--bubble-menu-text);
+  border: var(--border-width-thin) solid var(--bubble-menu-border);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(8px);
+  box-shadow: var(--bubble-menu-shadow);
+  backdrop-filter: blur(var(--bubble-menu-backdrop-blur));
   white-space: nowrap;
   z-index: var(--z-index-dropdown);
   animation: bubbleMenuFadeIn var(--transition-fast) var(--transition-timing);
+  font-family: var(--font-family-sans);
 }
 
 @keyframes bubbleMenuFadeIn {
@@ -28,6 +56,10 @@
   }
 }
 
+/* ========================================
+   Bubble Menu Buttons
+   ======================================== */
+
 .bubble-menu button {
   border: none;
   background: transparent;
@@ -36,31 +68,45 @@
   border-radius: var(--border-radius-md);
   cursor: pointer;
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  min-height: 32px;
+  gap: var(--spacing-xs);
+  min-width: var(--bubble-menu-button-size);
+  min-height: var(--bubble-menu-button-size);
   transition:
     background-color var(--transition-fast) var(--transition-timing),
     color var(--transition-fast) var(--transition-timing),
-    opacity var(--transition-fast) var(--transition-timing);
+    opacity var(--transition-fast) var(--transition-timing),
+    transform var(--transition-fast) var(--transition-timing);
   user-select: none;
 }
 
+/* Button label styling */
+.bubble-menu button .button-label {
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
 .bubble-menu button:hover:not(:disabled) {
-  background: rgba(148, 163, 184, 0.2);
-  color: #ffffff;
+  background: var(--bubble-menu-button-hover-bg);
+  color: var(--color-text-inverse);
+  transform: translateY(-1px);
 }
 
 .bubble-menu button:active:not(:disabled) {
-  background: rgba(148, 163, 184, 0.3);
+  background: var(--bubble-menu-button-active-bg);
+  transform: translateY(0);
 }
 
+/* Active state */
 .bubble-menu button.is-active {
-  background: var(--color-primary-light);
-  color: var(--color-primary);
+  background: var(--button-bg-active);
+  color: var(--button-text-active);
+  box-shadow: var(--shadow-button-active);
 }
 
 .bubble-menu button:disabled {
@@ -68,24 +114,313 @@
   cursor: not-allowed;
 }
 
+.bubble-menu button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Bubble Menu Divider
+   ======================================== */
+
 .bubble-menu__divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(148, 163, 184, 0.3);
-  margin: 0 2px;
+  width: var(--border-width-thin);
+  height: var(--bubble-menu-divider-height);
+  background: var(--bubble-menu-divider-bg);
+  margin: 0 var(--spacing-xs);
   flex-shrink: 0;
 }
 
-/* Link bubble menu variant */
+/* ========================================
+   Bubble Menu Variants
+   ======================================== */
+
+/* Link bubble menu - slightly wider spacing */
 .bubble-menu--link {
   gap: var(--spacing-sm);
 }
 
 .bubble-menu--link button {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Table bubble menu - compact spacing */
+.bubble-menu--table {
   gap: var(--spacing-xs);
 }
 
-/* Table bubble menu variant */
-.bubble-menu--table {
+/* Text bubble menu - default spacing */
+.bubble-menu--text {
   gap: var(--spacing-xs);
+}
+
+/* ========================================
+   Responsive Adjustments
+   ======================================== */
+
+@media (max-width: 768px) {
+  .bubble-menu {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+  }
+
+  .bubble-menu button {
+    min-width: 28px;
+    min-height: 28px;
+    padding: var(--spacing-xs);
+  }
+
+  .bubble-menu--link button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+/* ========================================
+   Dropdown Menu Styles
+   ======================================== */
+
+/* Sub-trigger */
+.dropdown-menu__sub-trigger {
+  display: flex;
+  cursor: default;
+  user-select: none;
+  align-items: center;
+  border-radius: var(--border-radius-sm);
+  padding: 0.375rem 0.5rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+}
+
+.dropdown-menu__sub-trigger:focus,
+.dropdown-menu__sub-trigger[data-state='open'] {
+  background-color: #f3f4f6;
+}
+
+.dropdown-menu__sub-trigger--inset {
+  padding-left: 2rem;
+}
+
+.dropdown-menu__sub-trigger-icon {
+  margin-left: auto;
+  height: 1rem;
+  width: 1rem;
+  opacity: 0.5;
+}
+
+/* Sub-content */
+.dropdown-menu__sub-content {
+  z-index: 50;
+  min-width: 8rem;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  padding: 0.25rem;
+  color: #030712;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu__sub-content[data-state='open'] {
+  animation: dropdownFadeIn 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu__sub-content[data-state='closed'] {
+  animation: dropdownFadeOut 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Content */
+.dropdown-menu__content {
+  z-index: 50;
+  min-width: 10rem;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  padding: 0.25rem;
+  color: #030712;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu__content:focus {
+  outline: none;
+}
+
+.dropdown-menu__content[data-state='open'] {
+  animation: dropdownFadeIn 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu__content[data-state='closed'] {
+  animation: dropdownFadeOut 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Menu item */
+.dropdown-menu__item {
+  position: relative;
+  display: flex;
+  cursor: default;
+  user-select: none;
+  align-items: center;
+  border-radius: var(--border-radius-sm);
+  padding: 0.375rem 0.5rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition:
+    background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu__item:focus {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.dropdown-menu__item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dropdown-menu__item--inset {
+  padding-left: 2rem;
+}
+
+/* Checkbox item */
+.dropdown-menu__checkbox-item {
+  position: relative;
+  display: flex;
+  cursor: default;
+  user-select: none;
+  align-items: center;
+  border-radius: var(--border-radius-sm);
+  padding: 0.375rem 0.5rem 0.375rem 2rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition:
+    background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu__checkbox-item:focus {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.dropdown-menu__checkbox-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dropdown-menu__checkbox-indicator {
+  position: absolute;
+  left: 0.5rem;
+  display: flex;
+  height: 0.875rem;
+  width: 0.875rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-menu__checkbox-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Radio item */
+.dropdown-menu__radio-item {
+  position: relative;
+  display: flex;
+  cursor: default;
+  user-select: none;
+  align-items: center;
+  border-radius: var(--border-radius-sm);
+  padding: 0.375rem 0.5rem 0.375rem 2rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition:
+    background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu__radio-item:focus {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.dropdown-menu__radio-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dropdown-menu__radio-indicator {
+  position: absolute;
+  left: 0.5rem;
+  display: flex;
+  height: 0.875rem;
+  width: 0.875rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-menu__radio-dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 9999px;
+  background-color: currentColor;
+}
+
+/* Label */
+.dropdown-menu__label {
+  padding: 0.375rem 0.5rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: #6b7280;
+}
+
+.dropdown-menu__label--inset {
+  padding-left: 2rem;
+}
+
+/* Separator */
+.dropdown-menu__separator {
+  margin: 0.25rem;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+/* Shortcut */
+.dropdown-menu__shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+}
+
+/* Animations */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dropdownFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }

@@ -1,5 +1,6 @@
 import type { Editor } from '@tiptap/react';
 import React from 'react';
+import { Icon } from '../icons';
 import {
   BubbleMenuWrapper,
   MenuButton,
@@ -22,14 +23,19 @@ export const TextBubbleMenu: React.FC<TextBubbleMenuProps> = ({ editor, onCreate
   const isLink = useIsActive(editor, 'link');
 
   return (
-    <BubbleMenuWrapper editor={editor} pluginKey="textMenu" shouldShow={whenTextSelectedNotInTable}>
+    <BubbleMenuWrapper
+      editor={editor}
+      pluginKey="textMenu"
+      shouldShow={whenTextSelectedNotInTable}
+      className="bubble-menu bubble-menu--text"
+    >
       <MenuButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         isActive={isBold}
         title="Bold (Cmd+B)"
         actionName="text.toggleBold"
       >
-        <strong>B</strong>
+        <Icon name="bold" size={18} />
       </MenuButton>
 
       <MenuButton
@@ -38,7 +44,7 @@ export const TextBubbleMenu: React.FC<TextBubbleMenuProps> = ({ editor, onCreate
         title="Italic (Cmd+I)"
         actionName="text.toggleItalic"
       >
-        <em>I</em>
+        <Icon name="italic" size={18} />
       </MenuButton>
 
       <MenuButton
@@ -47,7 +53,7 @@ export const TextBubbleMenu: React.FC<TextBubbleMenuProps> = ({ editor, onCreate
         title="Strikethrough"
         actionName="text.toggleStrike"
       >
-        <s>S</s>
+        <Icon name="strikethrough" size={18} />
       </MenuButton>
 
       <MenuButton
@@ -56,7 +62,7 @@ export const TextBubbleMenu: React.FC<TextBubbleMenuProps> = ({ editor, onCreate
         title="Code"
         actionName="text.toggleCode"
       >
-        &lt;/&gt;
+        <Icon name="code" size={18} />
       </MenuButton>
 
       <MenuDivider />
@@ -76,7 +82,7 @@ export const TextBubbleMenu: React.FC<TextBubbleMenuProps> = ({ editor, onCreate
         title="Add Link"
         actionName="text.addLink"
       >
-        🔗
+        <Icon name="link" size={18} />
       </MenuButton>
     </BubbleMenuWrapper>
   );

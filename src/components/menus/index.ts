@@ -55,6 +55,9 @@ export type { FloatingMenuWrapperProps } from './FloatingMenuWrapper';
 export { MenuButton } from './MenuButton';
 export type { MenuButtonProps } from './MenuButton';
 
+export { IconButton } from './IconButton';
+export type { IconButtonProps } from './IconButton';
+
 export { MenuDivider } from './MenuDivider';
 export type { MenuDividerProps } from './MenuDivider';
 

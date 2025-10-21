@@ -1,14 +1,28 @@
+import FontFamily from '@tiptap/extension-font-family';
+import { Gapcursor } from '@tiptap/extension-gapcursor';
 import Link from '@tiptap/extension-link';
+import { Mathematics } from '@tiptap/extension-mathematics';
 import Placeholder from '@tiptap/extension-placeholder';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
+import TextAlign from '@tiptap/extension-text-align';
+import { TextStyle } from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import 'katex/dist/katex.min.css';
 import React, { useState } from 'react';
 import { mergeExtensions } from '../../lib/extensions';
+import { FontSize, FontWeight, LetterSpacing } from '../../lib/tiptap-extensions';
 import '../../styles/design-tokens.css';
+import '../../styles/menubar.css';
+import '../../styles/menus.css';
+import '../../styles/SimpleEditor.css';
 import { LinkBubbleMenu, useLinkDialog } from '../link-menu';
 import TableEditorExtensions, { TableBubbleMenu } from '../table-editor';
 import { TextBubbleMenu } from '../text-menu';
-import './SimpleEditor.css';
+import '../typography-popover/TypographyPopover.css';
+import MenuBar from './MenuBar';
 
 const SimpleEditor: React.FC = () => {
   const [, setUpdateTrigger] = useState(0);
@@ -18,16 +32,82 @@ const SimpleEditor: React.FC = () => {
       [
         StarterKit.configure({
           link: false,
+          gapcursor: false,
+          underline: false,
+          bulletList: {
+            HTMLAttributes: { class: 'tiptap-bullet-list' },
+          },
+          orderedList: {
+            HTMLAttributes: { class: 'tiptap-ordered-list' },
+          },
+          listItem: {
+            HTMLAttributes: { class: 'tiptap-list-item' },
+          },
         }),
         Link.configure({
+          autolink: true,
+          linkOnPaste: true,
           openOnClick: true,
+          protocols: ['http', 'https', 'mailto', 'tel'],
           HTMLAttributes: {
             rel: 'noopener noreferrer',
             target: '_blank',
           },
         }),
         Placeholder.configure({
-          placeholder: 'Start typing...',
+          placeholder: ({ node }) => {
+            if (node.type.name === 'heading') {
+              return 'Heading...';
+            }
+            if (node.type.name === 'codeBlock') {
+              return '// Code here...';
+            }
+            return 'Start typing...';
+          },
+          showOnlyCurrent: true,
+        }),
+        Gapcursor,
+        TextStyle,
+        Underline,
+        FontFamily.configure({
+          types: ['textStyle'],
+        }),
+        FontSize.configure({
+          types: ['textStyle'],
+        }),
+        FontWeight.configure({
+          types: ['textStyle'],
+        }),
+        LetterSpacing.configure({
+          types: ['textStyle'],
+        }),
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
+        TaskList,
+        TaskItem.configure({
+          nested: true,
+        }),
+        Mathematics.configure({
+          katexOptions: {
+            throwOnError: false,
+          },
+          inlineOptions: {
+            onClick: (node, pos) => {
+              const latex = prompt('Enter LaTeX formula:', node.attrs.latex);
+              if (latex) {
+                editor?.chain().setNodeSelection(pos).updateInlineMath({ latex }).focus().run();
+              }
+            },
+          },
+          blockOptions: {
+            onClick: (node, pos) => {
+              const latex = prompt('Enter LaTeX formula:', node.attrs.latex);
+              if (latex) {
+                editor?.chain().setNodeSelection(pos).updateBlockMath({ latex }).focus().run();
+              }
+            },
+          },
         }),
       ],
       TableEditorExtensions
@@ -36,6 +116,49 @@ const SimpleEditor: React.FC = () => {
     editorProps: {
       attributes: {
         class: 'simple-editor-content',
+      },
+      transformPastedText(text) {
+        // Reduce excessive line breaks from external sources
+        return text.replace(/\n{3,}/g, '\n\n');
+      },
+      transformPastedHTML(html) {
+        // Clean up common paste issues from Word, browsers, etc.
+        const cleanedHtml = html
+          .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
+          .replace(/<span style="[^"]*">/g, '<span>'); // Remove inline styles from spans
+
+        // Protect against deeply nested HTML that can freeze the editor
+        const div = document.createElement('div');
+        div.innerHTML = cleanedHtml;
+
+        const maxDepth = 10;
+        const removeDeepNesting = (el: Element, depth = 0): void => {
+          if (depth > maxDepth) {
+            // Flatten deeply nested content to text
+            el.innerHTML = el.textContent || '';
+            return;
+          }
+          Array.from(el.children).forEach((child) => removeDeepNesting(child, depth + 1));
+        };
+
+        removeDeepNesting(div);
+        return div.innerHTML;
+      },
+      handleDOMEvents: {
+        // Improve focus restoration after bubble menu interactions
+        blur: (_view, event) => {
+          const relatedTarget = event.relatedTarget as HTMLElement | null;
+          // Don't blur if focusing a bubble menu, toolbar, or modal
+          if (
+            relatedTarget &&
+            (relatedTarget.closest('.bubble-menu') ||
+              relatedTarget.closest('.simple-editor-toolbar') ||
+              relatedTarget.closest('.modal-dialog'))
+          ) {
+            return true; // Prevent default blur behavior
+          }
+          return false;
+        },
       },
     },
     onUpdate: () => {
@@ -50,178 +173,13 @@ const SimpleEditor: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const isInTable = editor.isActive('table');
-
   return (
     <div className="simple-editor-wrapper">
-      <div className="simple-editor-toolbar">
-        {/* History */}
-        <button
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-          title="Undo (Cmd+Z)"
-        >
-          ⟲
-        </button>
-        <button
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-          title="Redo (Cmd+Shift+Z)"
-        >
-          ⟳
-        </button>
-
-        <div className="toolbar-divider" />
-
-        {/* Headings & Lists */}
-        <select
-          onChange={(e) => {
-            const level = e.target.value;
-            if (level === 'p') {
-              editor.chain().focus().setParagraph().run();
-            } else {
-              editor
-                .chain()
-                .focus()
-                .toggleHeading({ level: parseInt(level) as 1 | 2 | 3 })
-                .run();
-            }
-          }}
-          value={
-            editor.isActive('heading', { level: 1 })
-              ? '1'
-              : editor.isActive('heading', { level: 2 })
-                ? '2'
-                : editor.isActive('heading', { level: 3 })
-                  ? '3'
-                  : 'p'
-          }
-          className="heading-select"
-          title="Text Style"
-        >
-          <option value="p">Paragraph</option>
-          <option value="1">Heading 1</option>
-          <option value="2">Heading 2</option>
-          <option value="3">Heading 3</option>
-        </select>
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'is-active' : ''}
-          title="Bullet List"
-        >
-          •
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive('orderedList') ? 'is-active' : ''}
-          title="Numbered List"
-        >
-          1.
-        </button>
-
-        <div className="toolbar-divider" />
-
-        {/* Text Formatting */}
-        <button
-          onClick={() => {
-            editor.chain().focus().toggleBold().run();
-            setUpdateTrigger((prev) => prev + 1);
-          }}
-          className={editor.isActive('bold') ? 'is-active' : ''}
-          title="Bold"
-        >
-          𝐁
-        </button>
-        <button
-          onClick={() => {
-            editor.chain().focus().toggleItalic().run();
-            setUpdateTrigger((prev) => prev + 1);
-          }}
-          className={editor.isActive('italic') ? 'is-active' : ''}
-          title="Italic"
-        >
-          𝐼
-        </button>
-        <button
-          onClick={() => {
-            editor.chain().focus().toggleStrike().run();
-            setUpdateTrigger((prev) => prev + 1);
-          }}
-          className={editor.isActive('strike') ? 'is-active' : ''}
-          title="Strikethrough"
-        >
-          S̶
-        </button>
-        <button
-          onClick={() => {
-            editor.chain().focus().toggleCode().run();
-            setUpdateTrigger((prev) => prev + 1);
-          }}
-          className={editor.isActive('code') ? 'is-active' : ''}
-          title="Code"
-        >
-          &lt;/&gt;
-        </button>
-        <button
-          onClick={openLinkDialog}
-          className={editor.isActive('link') ? 'is-active' : ''}
-          title="Link"
-        >
-          🔗
-        </button>
-        <button
-          onClick={() => {
-            editor.chain().focus().unsetLink().run();
-            setUpdateTrigger((prev) => prev + 1);
-          }}
-          disabled={!editor.isActive('link')}
-          title="Remove Link"
-        >
-          🔗✕
-        </button>
-
-        <div className="toolbar-divider" />
-
-        {/* Block Elements */}
-        <button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'is-active' : ''}
-          title="Quote"
-        >
-          ❝
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive('codeBlock') ? 'is-active' : ''}
-          title="Code Block"
-        >
-          ```
-        </button>
-
-        <div className="toolbar-divider" />
-
-        <button
-          onClick={() =>
-            editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
-          }
-          disabled={isInTable}
-          title="Insert Table"
-        >
-          📊
-        </button>
-
-        <div className="toolbar-divider" />
-
-        <button
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="Horizontal Line"
-        >
-          ─
-        </button>
-        <button onClick={() => editor.chain().focus().setHardBreak().run()} title="Line Break">
-          ↵
-        </button>
-      </div>
+      <MenuBar
+        editor={editor}
+        openLinkDialog={openLinkDialog}
+        setUpdateTrigger={setUpdateTrigger}
+      />
       <EditorContent editor={editor} />
 
       {/* Bubble menus - appear contextually based on selection/cursor position */}

@@ -1,6 +1,7 @@
 import { getMarkRange } from '@tiptap/core';
 import type { Editor } from '@tiptap/react';
 import React, { useState } from 'react';
+import { Icon } from '../icons';
 import '../../styles/modal.css';
 import { BubbleMenuWrapper, MenuButton, useAttributes, whenInLink } from '../menus';
 
@@ -186,11 +187,13 @@ export const LinkBubbleMenu: React.FC<LinkBubbleMenuProps> = ({ editor }) => {
       className="bubble-menu bubble-menu--link"
     >
       <MenuButton onClick={handleOpenEdit} title="Edit Link">
-        ✏️ Edit
+        <Icon name="linkEdit" size={16} />
+        <span className="button-label">Edit</span>
       </MenuButton>
 
       <MenuButton onClick={() => editor.chain().focus().unsetLink().run()} title="Remove Link">
-        🔗✕ Remove
+        <Icon name="linkRemove" size={16} />
+        <span className="button-label">Remove</span>
       </MenuButton>
 
       <MenuButton
@@ -200,7 +203,8 @@ export const LinkBubbleMenu: React.FC<LinkBubbleMenuProps> = ({ editor }) => {
         disabled={!currentUrl}
         title="Open Link"
       >
-        ↗️ Open
+        <Icon name="linkOpen" size={16} />
+        <span className="button-label">Open</span>
       </MenuButton>
     </BubbleMenuWrapper>
   );
